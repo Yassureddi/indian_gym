@@ -8,9 +8,9 @@
   width: 280px;
   height: 100dvh;
   padding: 1.5rem 1.25rem;
-  background: rgba(8, 8, 8, 0.95);
+  background: var(--gradient-sidebar);
   border-right: 1px solid var(--color-glass-border);
-  backdrop-filter: var(--glass-blur);
+  box-shadow: 4px 0 32px rgba(0, 0, 0, 0.35);
   transform: translateX(-100%);
   transition: transform var(--transition-base);
 }

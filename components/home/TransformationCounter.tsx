@@ -1,53 +1,17 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react";
+import AnimatedCounter from "@/components/animations/AnimatedCounter";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { TRANSFORMATION_STATS } from "@/lib/constants";
 import styles from "./TransformationCounter.module.css";
 
-gsap.registerPlugin(ScrollTrigger);
-
 export default function TransformationCounter() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const counters = section.querySelectorAll("[data-count]");
-
-    counters.forEach((counter) => {
-      const target = parseInt(counter.getAttribute("data-count") || "0", 10);
-
-      gsap.fromTo(
-        counter,
-        { innerText: 0 },
-        {
-          innerText: target,
-          duration: 2.5,
-          ease: "power2.out",
-          snap: { innerText: 1 },
-          scrollTrigger: {
-            trigger: section,
-            start: "top 75%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => {
-        if (t.trigger === section) t.kill();
-      });
-    };
-  }, []);
-
   return (
     <section ref={sectionRef} className={styles.section} id="transformations">
-      <div className={styles.bgGlow} aria-hidden="true" />
+      <div className={`${styles.bgGlow} premium-glow-pulse`} aria-hidden="true" />
       <div className="container">
         <SectionHeading
           subtitle="Real Results"
@@ -55,12 +19,14 @@ export default function TransformationCounter() {
           description="Numbers that speak louder than words. Join our legacy of success."
         />
         <div className={styles.grid}>
-          {TRANSFORMATION_STATS.map((stat, i) => (
-            <div key={stat.label} className={styles.item} style={{ animationDelay: `${i * 0.1}s` }}>
-              <span className={styles.value}>
-                <span data-count={stat.value}>0</span>
-                {stat.suffix}
-              </span>
+          {TRANSFORMATION_STATS.map((stat) => (
+            <div key={stat.label} className={`${styles.item} premium-scale-hover`}>
+              <AnimatedCounter
+                value={stat.value}
+                suffix={stat.suffix}
+                triggerRef={sectionRef}
+                className={styles.value}
+              />
               <span className={styles.label}>{stat.label}</span>
             </div>
           ))}

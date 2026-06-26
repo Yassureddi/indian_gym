@@ -15,7 +15,7 @@ export default function Location() {
         <SectionHeading
           subtitle="Visit Us"
           title="Our Location"
-          description="Find us in Srinagar, Visakhapatnam. Walk in or message us on WhatsApp."
+          description="Find us in Asilmetta, Visakhapatnam. Walk in or message us on WhatsApp."
         />
         <div className={styles.grid}>
           <FadeIn direction="left">

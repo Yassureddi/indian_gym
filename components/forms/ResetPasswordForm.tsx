@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import Logo from "@/components/brand/Logo";
+import PasswordInput from "@/components/ui/PasswordInput";
 import styles from "./LoginForm.module.css";
 
 export default function ResetPasswordForm() {
@@ -79,11 +80,11 @@ export default function ResetPasswordForm() {
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.field}>
             <label htmlFor="password">New Password</label>
-            <input id="password" name="password" type="password" minLength={6} required />
+            <PasswordInput id="password" name="password" minLength={6} required />
           </div>
           <div className={styles.field}>
             <label htmlFor="confirm">Confirm Password</label>
-            <input id="confirm" name="confirm" type="password" minLength={6} required />
+            <PasswordInput id="confirm" name="confirm" minLength={6} required />
           </div>
           <Button
             type="submit"

@@ -9,6 +9,9 @@ export interface User {
   role: UserRole;
   avatar?: string;
   goal?: string;
+  gender?: string;
+  age?: number;
+  joiningDate?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -21,6 +24,9 @@ export interface SessionUser {
   role: UserRole;
   avatar?: string;
   goal?: string;
+  gender?: string;
+  age?: number;
+  joiningDate?: string;
 }
 
 export interface JwtPayload {
@@ -41,14 +47,6 @@ export interface MemberMembership {
   endDate: string;
   status: MembershipStatus;
   amount: number;
-}
-
-export interface AttendanceRecord {
-  id: string;
-  userId: string;
-  date: string;
-  checkIn: string;
-  checkOut?: string;
 }
 
 export interface WorkoutExercise {

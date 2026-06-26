@@ -32,7 +32,7 @@
 }
 
 .primary:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.02);
   box-shadow: var(--shadow-gold-lg);
 }
 

@@ -7,6 +7,17 @@ export async function getPayments(): Promise<Payment[]> {
   return readJson<Payment[]>(FILE, []);
 }
 
+export async function getPaymentById(id: string): Promise<Payment | null> {
+  const payments = await getPayments();
+  return payments.find((p) => p.id === id) ?? null;
+}
+
+export async function createPayment(data: Omit<Payment, "id">): Promise<Payment> {
+  const payment: Payment = { ...data, id: createId("pay") };
+  await savePayment(payment);
+  return payment;
+}
+
 export async function savePayment(payment: Payment) {
   const payments = await getPayments();
   payments.unshift(payment);
@@ -20,34 +31,43 @@ export async function ensureSeedPayments() {
   const now = new Date();
   const seed: Payment[] = [
     {
-      id: createId("pay"),
+      id: "pay_demo_1",
       userId: "user_member_demo",
+      membershipId: "mem_demo_half_yearly",
       memberName: "Demo Member",
-      amount: 14999,
+      amount: 8500,
       method: "upi",
       status: "completed",
-      planName: "Half Yearly",
+      planId: "half-yearly:cardio-strength",
+      planName: "Half Yearly · Cardio + Strength Training",
+      membershipDuration: "6 Months",
       date: new Date(now.getTime() - 2 * 86400000).toISOString().split("T")[0],
       reference: "UPI-482910",
     },
     {
-      id: createId("pay"),
+      id: "pay_demo_2",
       userId: "user_member_demo",
+      membershipId: "mem_demo_half_yearly",
       memberName: "Demo Member",
-      amount: 2999,
+      amount: 1500,
       method: "cash",
       status: "completed",
-      planName: "Monthly",
+      planId: "monthly:strength",
+      planName: "Monthly · Strength Training",
+      membershipDuration: "1 Month",
       date: new Date(now.getTime() - 35 * 86400000).toISOString().split("T")[0],
     },
     {
-      id: createId("pay"),
+      id: "pay_demo_3",
       userId: "user_member_demo",
+      membershipId: "mem_demo_half_yearly",
       memberName: "Demo Member",
-      amount: 7999,
+      amount: 4500,
       method: "upi",
       status: "pending",
-      planName: "Quarterly",
+      planId: "quarterly:cardio-strength",
+      planName: "Quarterly · Cardio + Strength Training",
+      membershipDuration: "3 Months",
       date: now.toISOString().split("T")[0],
       reference: "UPI-PENDING",
     },

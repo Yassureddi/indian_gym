@@ -11,7 +11,7 @@ import styles from "./page.module.css";
 
 export const metadata: Metadata = createMetadata(
   "Membership",
-  "Gym membership plans in Visakhapatnam from ₹2,999/month. Monthly, Quarterly, Half Yearly & Yearly plans at INDIAN GYM K N RAJU FITNESS. UPI & cash accepted.",
+  "Gym membership plans in Visakhapatnam from ₹1,500/month. Strength Training & Cardio + Strength plans. Monthly, Quarterly, Half Yearly & Yearly at INDIAN GYM K N RAJU FITNESS.",
   "/membership"
 );
 
@@ -29,7 +29,7 @@ export default function MembershipPage() {
       />
       <PageHero
         title="Membership Plans"
-        subtitle="Invest in yourself with flexible billing — the longer you commit, the more you save"
+        subtitle="Choose Strength Training or Cardio + Strength — flexible billing for every fitness goal"
         breadcrumb="Pricing"
       />
 
@@ -37,8 +37,8 @@ export default function MembershipPage() {
         <div className="container">
           <SectionHeading
             subtitle="Choose Your Plan"
-            title="Luxury Fitness, Flexible Pricing"
-            description="All plans include access to our premium facilities, certified trainers, and separate ladies & gents workout areas."
+            title="Premium Training, Clear Pricing"
+            description="Every plan includes professional trainer guidance, fitness assessment, locker access, and gym-hours training."
           />
 
           <div className={styles.grid}>

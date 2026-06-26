@@ -2,6 +2,8 @@
 @import "../styles/variables.css";
 @import "../styles/typography.css";
 @import "../styles/brand.css";
+@import "../styles/animations.css";
+@import "../styles/select.css";
 
 *,
 *::before,
@@ -22,11 +24,23 @@ body {
   font-size: var(--text-body);
   background: var(--color-primary);
   background-image: var(--gradient-page), var(--gradient-gold-radial);
-  background-attachment: fixed;
+  background-attachment: scroll;
   color: var(--color-text);
   line-height: var(--leading-normal);
   overflow-x: hidden;
   min-height: 100vh;
+}
+
+@media (min-width: 769px) {
+  body {
+    background-attachment: fixed;
+  }
+}
+
+.auth-shell {
+  min-height: 100dvh;
+  background: var(--color-primary);
+  background-image: var(--gradient-page), var(--gradient-gold-radial);
 }
 
 h1 {
@@ -82,7 +96,10 @@ button {
 }
 
 input,
-textarea,
+textarea {
+  font-family: inherit;
+}
+
 select {
   font-family: inherit;
 }

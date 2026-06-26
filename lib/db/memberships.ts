@@ -7,6 +7,13 @@ export async function getMemberships(): Promise<MemberMembership[]> {
   return readJson<MemberMembership[]>(FILE, []);
 }
 
+export async function getMembershipById(
+  id: string
+): Promise<MemberMembership | null> {
+  const memberships = await getMemberships();
+  return memberships.find((m) => m.id === id) ?? null;
+}
+
 export async function getMembershipByUserId(
   userId: string
 ): Promise<MemberMembership | null> {
@@ -38,13 +45,13 @@ export async function ensureSeedMemberships() {
   end.setMonth(end.getMonth() + 6);
 
   await saveMembership({
-    id: createId("mem"),
+    id: "mem_demo_half_yearly",
     userId: "user_member_demo",
-    planId: "half-yearly",
-    planName: "Half Yearly",
+    planId: "half-yearly:cardio-strength",
+    planName: "Half Yearly · Cardio + Strength Training",
     startDate: start.toISOString().split("T")[0],
     endDate: end.toISOString().split("T")[0],
     status: "active",
-    amount: 14999,
+    amount: 8500,
   });
 }

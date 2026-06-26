@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { BLOGS } from "@/lib/constants";
+import { fetchBlogs } from "@/lib/api/content";
 import { SITE_URL } from "@/lib/seo/config";
 
 const PUBLIC_ROUTES: {
@@ -21,8 +21,9 @@ const PUBLIC_ROUTES: {
   { path: "/free-trial", priority: 0.9, changeFrequency: "weekly" },
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date();
+  const blogs = await fetchBlogs();
 
   const staticPages = PUBLIC_ROUTES.map(({ path, priority, changeFrequency }) => ({
     url: `${SITE_URL}${path === "/" ? "" : path}`,
@@ -31,7 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority,
   }));
 
-  const blogPages = BLOGS.map((blog) => ({
+  const blogPages = blogs.map((blog) => ({
     url: `${SITE_URL}/blogs/${blog.id}`,
     lastModified: new Date(blog.date),
     changeFrequency: "monthly" as const,

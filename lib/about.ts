@@ -1,3 +1,5 @@
+import { ABOUT_GYM_IMAGE } from "./site-content.constants";
+
 export const ABOUT_STORY = {
   title: "Our Story",
   headline: "A Legacy Built on Strength & Dedication",
@@ -6,8 +8,7 @@ export const ABOUT_STORY = {
     "What began as a modest training space in Hyderabad has evolved into one of the city's most prestigious fitness destinations. Over 15 years, we've transformed thousands of lives through personalized training, world-class equipment, and an unwavering commitment to excellence.",
     "Today, we stand as a symbol of luxury fitness in India — where every member is treated like an athlete and every workout is a step toward greatness.",
   ],
-  image:
-    "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&h=850&fit=crop",
+  image: ABOUT_GYM_IMAGE,
 };
 
 export const ABOUT_MISSION = {

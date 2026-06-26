@@ -12,14 +12,17 @@ interface TrainerCardProps {
 }
 
 export default function TrainerCard({ trainer, index }: TrainerCardProps) {
+  const isRemote = trainer.image.startsWith("http");
+
   return (
     <motion.article
       className={styles.card}
       initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-      whileHover={{ y: -10 }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -10, scale: 1.02 }}
+      style={{ willChange: "transform" }}
     >
       <div className={styles.photoWrap}>
         <Image
@@ -28,6 +31,7 @@ export default function TrainerCard({ trainer, index }: TrainerCardProps) {
           fill
           sizes="(max-width: 768px) 100vw, 33vw"
           className={styles.photo}
+          unoptimized={!isRemote}
         />
         <div className={styles.photoOverlay} />
         <span className={styles.experienceBadge}>{trainer.experience}</span>

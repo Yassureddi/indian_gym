@@ -3,7 +3,6 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import { MEMBERSHIP_PLANS } from "@/lib/membership";
-import { formatPrice } from "@/lib/utils";
 import styles from "./HomeMembership.module.css";
 
 export default function HomeMembership() {
@@ -13,7 +12,7 @@ export default function HomeMembership() {
         <SectionHeading
           subtitle="Membership"
           title="Choose Your Path"
-          description="Flexible plans designed for every fitness ambition."
+          description="Strength Training or Cardio + Strength — plans for every commitment level."
         />
         <div className={styles.grid}>
           {MEMBERSHIP_PLANS.map((plan, i) => (
@@ -24,26 +23,35 @@ export default function HomeMembership() {
               >
                 {plan.popular && <span className={styles.badge}>Most Popular</span>}
                 <h3 className={styles.name}>{plan.name}</h3>
-                <div className={styles.price}>
-                  <span className={styles.amount}>{formatPrice(plan.price)}</span>
-                  <span className={styles.period}>{plan.period}</span>
-                </div>
-                <ul className={styles.features}>
-                  {plan.features.map((f) => (
-                    <li key={f}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                      </svg>
-                      {f}
-                    </li>
+                <p className={styles.period}>{plan.period}</p>
+
+                <div className={styles.categories}>
+                  {plan.categories.map((category) => (
+                    <div key={category.id} className={styles.categoryBlock}>
+                      <p className={styles.categoryName}>{category.name}</p>
+                      <p className={styles.categoryPrice}>
+                        ₹{category.price.toLocaleString("en-IN")}
+                      </p>
+                      <ul className={styles.features}>
+                        {category.features.slice(0, 3).map((f) => (
+                          <li key={f}>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   ))}
-                </ul>
+                </div>
+
                 <Button
-                  href="/free-trial"
+                  href="/membership"
                   variant={plan.popular ? "primary" : "outline"}
                   className={styles.btn}
                 >
-                  Get Started
+                  View Plans
                 </Button>
               </GlassCard>
             </FadeIn>

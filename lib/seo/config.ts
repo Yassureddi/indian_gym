@@ -30,7 +30,7 @@ export const GLOBAL_KEYWORDS = [
   "fitness center Vizag",
   "KN Raju Fitness",
   "Indian Gym Visakhapatnam",
-  "gym near Srinagar Vizag",
+  "gym near Asilmetta Vizag",
   "personal training Visakhapatnam",
   "weight training gym",
   "bodybuilding gym Vizag",
@@ -110,10 +110,11 @@ export function getOpeningHoursSpecification() {
 export function getGymAddress() {
   return {
     "@type": "PostalAddress",
-    streetAddress: CONTACT.addressLines.slice(0, 3).join(", "),
+    streetAddress:
+      "3rd Floor, 9-1-245, Rama Talkies Rd, near Timpany School, CBM Compound, Asilmetta",
     addressLocality: "Visakhapatnam",
     addressRegion: "Andhra Pradesh",
-    postalCode: "530016",
+    postalCode: CONTACT.postalCode,
     addressCountry: "IN",
   };
 }

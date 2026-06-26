@@ -3,6 +3,16 @@ import { verifyToken } from "./jwt";
 import { getUserById, toSessionUser } from "@/lib/db/users";
 import type { SessionUser } from "./types";
 
+function sessionFromJwt(payload: NonNullable<Awaited<ReturnType<typeof verifyToken>>>): SessionUser {
+  return {
+    id: payload.sub,
+    email: payload.email,
+    name: payload.name,
+    role: payload.role,
+    phone: "",
+  };
+}
+
 export async function getSession(): Promise<SessionUser | null> {
   const token = await getAuthToken();
   if (!token) return null;
@@ -11,9 +21,11 @@ export async function getSession(): Promise<SessionUser | null> {
   if (!payload?.sub) return null;
 
   const user = await getUserById(payload.sub);
-  if (!user) return null;
+  if (user) {
+    return toSessionUser(user);
+  }
 
-  return toSessionUser(user);
+  return sessionFromJwt(payload);
 }
 
 export async function requireSession(): Promise<SessionUser> {

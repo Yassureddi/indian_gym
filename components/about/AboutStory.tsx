@@ -15,7 +15,7 @@ export default function AboutStory() {
             <div className={styles.imageFrame}>
               <Image
                 src={ABOUT_STORY.image}
-                alt="KN Raju Fitness gym"
+                alt="INDIAN GYM K N RAJU FITNESS interior — training floor and equipment"
                 width={600}
                 height={720}
                 className={styles.image}

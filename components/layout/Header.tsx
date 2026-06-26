@@ -51,7 +51,9 @@ export default function Header() {
       className={`${styles.header} ${isScrolled ? styles.scrolled : ""}`}
     >
       <div className={`container ${styles.inner}`}>
-        <Logo variant="navbar" />
+        <div className={styles.brand}>
+          <Logo variant="navbar" />
+        </div>
 
         <nav className={styles.nav} aria-label="Main navigation">
           <ul className={styles.navList}>

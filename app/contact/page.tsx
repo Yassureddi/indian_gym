@@ -10,7 +10,7 @@ import styles from "./page.module.css";
 
 export const metadata: Metadata = createMetadata(
   "Contact",
-  "Contact INDIAN GYM K N RAJU FITNESS in Visakhapatnam. Call 8142113631 or message us on WhatsApp. Visit us near Timpany School, Srinagar.",
+  "Contact INDIAN GYM K N RAJU FITNESS in Visakhapatnam. Call 8142113631 or message us on WhatsApp. Visit us near Timpany School, Asilmetta.",
   "/contact"
 );
 
@@ -28,7 +28,7 @@ export default function ContactPage() {
       />
       <PageHero
         title="Contact Us"
-        subtitle="Visit us in Srinagar, Visakhapatnam or message us instantly on WhatsApp"
+        subtitle="Visit us in Asilmetta, Visakhapatnam or message us instantly on WhatsApp"
         breadcrumb="Get In Touch"
       />
 

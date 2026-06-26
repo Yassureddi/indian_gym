@@ -27,6 +27,12 @@
   pointer-events: none;
 }
 
+.parallaxGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
 .breadcrumb {
   display: inline-block;
   font-size: var(--text-label);
@@ -43,6 +49,10 @@
   font-weight: 700;
   margin-bottom: 1rem;
   position: relative;
+  background: var(--gradient-gold-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .subtitle {

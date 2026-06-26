@@ -4,22 +4,40 @@ export type PaymentStatus = "completed" | "pending" | "failed";
 export interface Payment {
   id: string;
   userId: string;
+  membershipId: string;
   memberName: string;
   amount: number;
   method: PaymentMethod;
   status: PaymentStatus;
+  planId: string;
   planName: string;
+  membershipDuration: string;
   date: string;
   reference?: string;
 }
 
-export interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  type: "info" | "success" | "warning" | "alert";
-  read: boolean;
-  createdAt: string;
+export interface PaymentDetails {
+  payment: Payment;
+  member: {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    gender?: string;
+    age?: number;
+    joiningDate?: string;
+    goal?: string;
+  };
+  membership: {
+    id: string;
+    planId: string;
+    planName: string;
+    startDate: string;
+    endDate: string;
+    membershipDuration: string;
+    planPrice: number;
+    status: string;
+  };
 }
 
 export type ActivityType =

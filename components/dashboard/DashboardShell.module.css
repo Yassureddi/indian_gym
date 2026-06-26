@@ -1,7 +1,8 @@
 .shell {
   display: flex;
   min-height: 100dvh;
-  background: var(--gradient-page);
+  background: var(--color-primary);
+  background-image: var(--gradient-page), var(--gradient-gold-radial);
 }
 
 .main {
@@ -16,7 +17,7 @@
   gap: 1rem;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--color-glass-border);
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--header-glass-scrolled);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;

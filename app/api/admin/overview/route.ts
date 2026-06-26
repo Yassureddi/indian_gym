@@ -1,90 +1,91 @@
 import { NextResponse } from "next/server";
-import { initializeDatabase } from "@/lib/db/init";
 import { requireAdmin } from "@/lib/auth/session";
-import { getUsers } from "@/lib/db/users";
-import { getMemberships } from "@/lib/db/memberships";
-import { getAttendance } from "@/lib/db/attendance";
-import { getPayments, getMonthlyRevenue } from "@/lib/db/payments";
-import { getActivity } from "@/lib/db/activity";
-import { getNotifications } from "@/lib/db/notifications";
 import { handleAuthError } from "@/lib/auth/api";
 import { MEMBERSHIP_PLANS } from "@/lib/membership";
-import { GALLERY_IMAGES } from "@/lib/gallery";
-import { TRAINERS } from "@/lib/trainers";
-import { BLOGS } from "@/lib/constants";
+import { initializeDatabase } from "@/lib/db/init";
+import { getActivity } from "@/lib/db/activity";
+import { getPayments } from "@/lib/db/payments";
+import { getMembers } from "@/lib/db/users";
+import { getBlogs } from "@/lib/db/blogs";
+import { getGalleryItems } from "@/lib/db/gallery";
+import { getTrainers } from "@/lib/db/trainers";
+import type { Payment } from "@/lib/admin/types";
 
-function getAttendanceChart(attendance: Awaited<ReturnType<typeof getAttendance>>) {
-  const days: { day: string; visits: number }[] = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const key = d.toISOString().split("T")[0];
-    const label = d.toLocaleDateString("en-IN", { weekday: "short" });
-    days.push({
-      day: label,
-      visits: attendance.filter((a) => a.date === key).length,
+function getMembershipDistribution(payments: Payment[]) {
+  const counts: Record<string, number> = {};
+  payments
+    .filter((p) => p.status === "completed")
+    .forEach((p) => {
+      counts[p.planName] = (counts[p.planName] || 0) + 1;
     });
-  }
-  return days;
+  return Object.entries(counts).map(([name, value]) => ({ name, value }));
 }
 
-function getMembershipDistribution(memberships: Awaited<ReturnType<typeof getMemberships>>) {
-  const counts: Record<string, number> = {};
-  memberships.forEach((m) => {
-    counts[m.planName] = (counts[m.planName] || 0) + 1;
+function getMonthlyRevenue(payments: Payment[]) {
+  const months: Record<string, number> = {};
+  const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date();
+    d.setMonth(d.getMonth() - i);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    months[key] = 0;
+  }
+
+  payments
+    .filter((p) => p.status === "completed")
+    .forEach((p) => {
+      const key = p.date.slice(0, 7);
+      if (key in months) months[key] += p.amount;
+    });
+
+  return Object.entries(months).map(([key, revenue]) => {
+    const month = parseInt(key.split("-")[1], 10) - 1;
+    return { month: labels[month], revenue };
   });
-  return Object.entries(counts).map(([name, value]) => ({ name, value }));
 }
 
 export async function GET() {
   try {
-    await initializeDatabase();
     await requireAdmin();
+    await initializeDatabase();
 
-    const [users, memberships, attendance, payments, activity, notifications] =
-      await Promise.all([
-        getUsers(),
-        getMemberships(),
-        getAttendance(),
-        getPayments(),
-        getActivity(),
-        getNotifications(),
-      ]);
+    const [members, payments, activity, gallery, blogs, trainers] = await Promise.all([
+      getMembers(),
+      getPayments(),
+      getActivity(),
+      getGalleryItems(),
+      getBlogs(),
+      getTrainers(),
+    ]);
 
-    const members = users.filter((u) => u.role === "member");
-    const today = new Date().toISOString().split("T")[0];
-    const todayVisits = attendance.filter((a) => a.date === today).length;
-    const activeMemberships = memberships.filter((m) => m.status === "active").length;
+    const now = new Date();
     const monthlyRevenue = payments
       .filter((p) => {
         if (p.status !== "completed") return false;
         const d = new Date(p.date);
-        const now = new Date();
         return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
       })
       .reduce((sum, p) => sum + p.amount, 0);
 
-    const unreadNotifications = notifications.filter((n) => !n.read).length;
+    const totalRevenue = payments
+      .filter((p) => p.status === "completed")
+      .reduce((sum, p) => sum + p.amount, 0);
 
     return NextResponse.json({
       stats: {
         totalMembers: members.length,
-        activeMemberships,
-        todayVisits,
+        activeMemberships: getMembershipDistribution(payments).reduce((s, p) => s + p.value, 0),
         monthlyRevenue,
-        totalRevenue: payments
-          .filter((p) => p.status === "completed")
-          .reduce((sum, p) => sum + p.amount, 0),
+        totalRevenue,
         pendingPayments: payments.filter((p) => p.status === "pending").length,
-        galleryItems: GALLERY_IMAGES.length,
-        blogPosts: BLOGS.length,
-        trainers: TRAINERS.length,
-        unreadNotifications,
+        galleryItems: gallery.length,
+        blogPosts: blogs.length,
+        trainers: trainers.length,
       },
       charts: {
-        attendance: getAttendanceChart(attendance),
         revenue: getMonthlyRevenue(payments),
-        membershipDistribution: getMembershipDistribution(memberships),
+        membershipDistribution: getMembershipDistribution(payments),
       },
       recentActivity: activity.slice(0, 8),
       membershipPlans: MEMBERSHIP_PLANS,

@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
-import { initializeDatabase } from "@/lib/db/init";
-import { getSession } from "@/lib/auth/session";
 import { jsonError } from "@/lib/auth/api";
+import { getSession } from "@/lib/auth/session";
+import { mapUser } from "@/lib/api/mappers";
 
 export async function GET() {
   try {
-    await initializeDatabase();
     const session = await getSession();
     if (!session) {
       return jsonError("Unauthorized", 401);
     }
-    return NextResponse.json({ user: session });
+    return NextResponse.json({ user: mapUser(session) });
   } catch {
     return jsonError("Failed to fetch session", 500);
   }

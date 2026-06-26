@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import type { SessionUser } from "@/lib/auth/types";
+import PasswordInput from "@/components/ui/PasswordInput";
 import styles from "./page.module.css";
 
 const GOALS = [
@@ -59,11 +60,12 @@ export default function ProfilePage() {
 
   const handlePasswordSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
     setLoading(true);
     setMessage("");
     setError("");
 
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData(form);
     const body = {
       currentPassword: formData.get("currentPassword"),
       newPassword: formData.get("newPassword"),
@@ -78,7 +80,7 @@ export default function ProfilePage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setMessage("Password changed successfully.");
-      e.currentTarget.reset();
+      form.reset();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Password change failed");
     } finally {
@@ -132,11 +134,11 @@ export default function ProfilePage() {
           <form onSubmit={handlePasswordSubmit} className={styles.form}>
             <div className={styles.field}>
               <label htmlFor="currentPassword">Current Password</label>
-              <input id="currentPassword" name="currentPassword" type="password" required />
+              <PasswordInput id="currentPassword" name="currentPassword" required />
             </div>
             <div className={styles.field}>
               <label htmlFor="newPassword">New Password</label>
-              <input id="newPassword" name="newPassword" type="password" minLength={6} required />
+              <PasswordInput id="newPassword" name="newPassword" minLength={6} required />
             </div>
             <Button type="submit" variant="outline" disabled={loading}>
               Update Password

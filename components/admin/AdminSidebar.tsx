@@ -10,7 +10,6 @@ import styles from "./AdminSidebar.module.css";
 
 interface AdminSidebarProps {
   user: SessionUser;
-  unreadCount?: number;
   onLogout: () => void;
   mobileOpen: boolean;
   onClose: () => void;
@@ -18,7 +17,6 @@ interface AdminSidebarProps {
 
 export default function AdminSidebar({
   user,
-  unreadCount = 0,
   onLogout,
   mobileOpen,
   onClose,
@@ -64,9 +62,6 @@ export default function AdminSidebar({
                 <AdminIcon name={item.icon} size={18} />
               </span>
               <span className={styles.linkText}>{item.label}</span>
-              {item.icon === "notifications" && unreadCount > 0 && (
-                <span className={styles.notifBadge}>{unreadCount}</span>
-              )}
             </Link>
           ))}
         </nav>

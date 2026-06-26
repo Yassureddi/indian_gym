@@ -111,3 +111,9 @@
 .cta {
   text-align: center;
 }
+
+.empty {
+  text-align: center;
+  color: var(--color-text-muted);
+  margin-bottom: 2rem;
+}

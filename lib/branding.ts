@@ -3,10 +3,14 @@ export const BRAND = {
   shortName: "KN Raju Fitness",
   tagline: "Transform Your Body, Elevate Your Life",
   logo: {
-    /** Drop your uploaded logo at public/brand/logo.png and set src below */
     src: "/brand/logo.svg",
     fallback: "/brand/logo.svg",
-    alt: "INDIAN GYM K N RAJU FITNESS Logo",
+    alt: "KN Raju Fitness — Be Strong logo",
+  },
+  loginLogo: {
+    src: "/brand/login-logo.png",
+    fallback: "/brand/login-logo.png",
+    alt: "KN Raju Fitness — Be Strong",
   },
   colors: {
     primary: "#000000",
@@ -17,11 +21,12 @@ export const BRAND = {
   },
 } as const;
 
-export type LogoVariant = "navbar" | "footer" | "login" | "icon";
+export type LogoVariant = "navbar" | "footer" | "login" | "hero" | "icon";
 
 export const LOGO_SIZES: Record<LogoVariant, { width: number; height: number }> = {
-  navbar: { width: 48, height: 48 },
-  footer: { width: 56, height: 56 },
-  login: { width: 72, height: 72 },
-  icon: { width: 32, height: 32 },
+  navbar: { width: 44, height: 44 },
+  footer: { width: 50, height: 58 },
+  login: { width: 180, height: 180 },
+  hero: { width: 200, height: 232 },
+  icon: { width: 34, height: 40 },
 };

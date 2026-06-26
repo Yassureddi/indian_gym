@@ -32,14 +32,13 @@ export default function AdminAnalyticsPage() {
   const [data, setData] = useState<{
     analytics: {
       memberGrowth: number;
-      avgVisitsPerMember: number;
+      activePlans: number;
       conversionRate: number;
-      totalCheckIns: number;
+      totalRevenue: number;
       revenue: { month: string; revenue: number }[];
       paymentMethods: { method: string; count: number }[];
       topPlans: { name: string; count: number }[];
       retentionRate: number;
-      peakHour: string;
     };
   } | null>(null);
 
@@ -62,9 +61,13 @@ export default function AdminAnalyticsPage() {
 
       <div className={shared.grid3} style={{ marginBottom: "1.5rem" }}>
         <AdminStatCard label="Member Growth" value={analytics.memberGrowth} change="Total members" />
-        <AdminStatCard label="Avg Visits / Member" value={analytics.avgVisitsPerMember} trend="up" />
+        <AdminStatCard label="Active Plans" value={analytics.activePlans} trend="up" />
         <AdminStatCard label="Conversion Rate" value={`${analytics.conversionRate}%`} trend="up" />
-        <AdminStatCard label="Retention Rate" value={`${analytics.retentionRate}%`} trend="neutral" />
+        <AdminStatCard
+          label="Total Revenue"
+          value={`₹${analytics.totalRevenue.toLocaleString("en-IN")}`}
+          trend="up"
+        />
       </div>
 
       <div className={shared.grid2}>
@@ -118,8 +121,8 @@ export default function AdminAnalyticsPage() {
         <div className={shared.panel}>
           <h3 style={{ fontFamily: "var(--font-heading)", marginBottom: "1rem" }}>Key Insights</h3>
           <ul style={{ display: "flex", flexDirection: "column", gap: "0.875rem", fontSize: "0.875rem", color: "var(--color-text-muted)" }}>
-            <li>📊 Total check-ins recorded: <strong style={{ color: "var(--color-gold)" }}>{analytics.totalCheckIns}</strong></li>
-            <li>⏰ Peak hours: <strong style={{ color: "var(--color-text)" }}>{analytics.peakHour}</strong></li>
+            <li>💰 Total revenue: <strong style={{ color: "var(--color-gold)" }}>₹{analytics.totalRevenue.toLocaleString("en-IN")}</strong></li>
+            <li>📋 Active plans sold: <strong style={{ color: "var(--color-text)" }}>{analytics.activePlans}</strong></li>
             <li>📈 Conversion rate: <strong style={{ color: "#4ade80" }}>{analytics.conversionRate}%</strong></li>
             <li>🔄 Member retention: <strong style={{ color: "var(--color-gold)" }}>{analytics.retentionRate}%</strong></li>
           </ul>

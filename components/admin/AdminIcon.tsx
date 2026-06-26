@@ -35,14 +35,6 @@ export default function AdminIcon({ name, size = 20 }: AdminIconProps) {
           <path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
         </svg>
       );
-    case "attendance":
-      return (
-        <svg {...props}>
-          <rect x="3" y="4" width="18" height="18" rx="2" />
-          <path d="M16 2v4M8 2v4M3 10h18" />
-          <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" />
-        </svg>
-      );
     case "payments":
       return (
         <svg {...props}>
@@ -77,13 +69,6 @@ export default function AdminIcon({ name, size = 20 }: AdminIconProps) {
           <path d="M6.5 6.5h11v11h-11z" />
           <path d="M6.5 12h11M12 6.5v11" />
           <circle cx="12" cy="12" r="9" />
-        </svg>
-      );
-    case "notifications":
-      return (
-        <svg {...props}>
-          <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 01-3.46 0" />
         </svg>
       );
     case "analytics":

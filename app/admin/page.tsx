@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import {
-  AreaChart,
-  Area,
   BarChart,
   Bar,
   PieChart,
@@ -31,12 +29,11 @@ interface OverviewData {
   stats: {
     totalMembers: number;
     activeMemberships: number;
-    todayVisits: number;
     monthlyRevenue: number;
+    totalRevenue: number;
     pendingPayments: number;
   };
   charts: {
-    attendance: { day: string; visits: number }[];
     revenue: { month: string; revenue: number }[];
     membershipDistribution: { name: string; value: number }[];
   };
@@ -86,9 +83,9 @@ export default function AdminDashboardPage() {
           trend="neutral"
         />
         <AdminStatCard
-          label="Today's Visits"
-          value={stats.todayVisits}
-          change="Check-ins today"
+          label="Total Revenue"
+          value={`₹${stats.totalRevenue.toLocaleString("en-IN")}`}
+          change="All time"
           trend="up"
         />
         <AdminStatCard
@@ -100,30 +97,6 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className={styles.charts}>
-        <AdminChartCard title="Weekly Attendance" subtitle="Daily gym check-ins">
-          <ResponsiveContainer width="100%" height={240}>
-            <AreaChart data={charts.attendance}>
-              <defs>
-                <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={GOLD} stopOpacity={0.35} />
-                  <stop offset="100%" stopColor={GOLD} stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid stroke="rgba(255,255,255,0.05)" vertical={false} />
-              <XAxis dataKey="day" stroke="#737373" fontSize={11} tickLine={false} />
-              <YAxis stroke="#737373" fontSize={11} tickLine={false} axisLine={false} />
-              <Tooltip contentStyle={tooltipStyle} />
-              <Area
-                type="monotone"
-                dataKey="visits"
-                stroke={GOLD}
-                strokeWidth={2}
-                fill="url(#goldGrad)"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </AdminChartCard>
-
         <AdminChartCard title="Revenue Trend" subtitle="Last 6 months">
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={charts.revenue}>

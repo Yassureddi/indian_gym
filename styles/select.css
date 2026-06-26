@@ -1,0 +1,106 @@
+/**
+ * Global native <select> styling — Black & Gold theme.
+ * Module CSS should set --select-bg only (not background shorthand) when needed.
+ */
+
+select {
+  --select-bg: var(--color-primary);
+  --select-border: var(--color-gold);
+  --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23D4AF37' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text);
+  background-color: var(--select-bg);
+  background-image: var(--select-chevron);
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  background-size: 1.125rem;
+  border: 1px solid var(--select-border);
+  border-radius: var(--radius-sm);
+  padding: 0.875rem 2.75rem 0.875rem 1rem;
+  cursor: pointer;
+  color-scheme: dark;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+select:hover {
+  border-color: var(--color-gold-light);
+  background-color: color-mix(in srgb, var(--color-gold) 8%, var(--select-bg));
+}
+
+select:focus,
+select:focus-visible {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow:
+    0 0 0 3px var(--color-gold-glow),
+    var(--shadow-gold);
+}
+
+select:active {
+  transform: scale(0.995);
+}
+
+select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+select:disabled:hover {
+  background-color: var(--select-bg);
+  border-color: var(--select-border);
+  box-shadow: none;
+  transform: none;
+}
+
+/* Legacy Edge */
+select::-ms-expand {
+  display: none;
+}
+
+select option {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  padding: 0.625rem 0.75rem;
+}
+
+select option:checked,
+select option:focus,
+select option:hover {
+  background-color: var(--color-gold);
+  color: var(--color-primary);
+}
+
+select option[value=""][disabled] {
+  color: var(--color-text-muted);
+}
+
+/* Admin / dark panel context */
+.admin-select,
+.field select {
+  --select-bg: rgba(0, 0, 0, 0.55);
+}
+
+/* Compact selects on smaller admin tables/forms */
+@media (max-width: 640px) {
+  select {
+    font-size: var(--text-body-sm);
+    padding: 0.75rem 2.5rem 0.75rem 0.875rem;
+  }
+}

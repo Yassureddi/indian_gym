@@ -3,7 +3,7 @@ export const SITE_SHORT_NAME = "KN Raju Fitness";
 export const SITE_TAGLINE = "Transform Your Body, Elevate Your Life";
 export const HERO_HEADLINE = "Become Stronger Than Yesterday";
 export const SITE_DESCRIPTION =
-  "Premium fitness studio in Visakhapatnam offering world-class training, personalized programs, and a luxury gym experience. Join INDIAN GYM K N RAJU FITNESS in Srinagar, Vizag.";
+  "Premium fitness studio in Visakhapatnam offering world-class training, personalized programs, and a luxury gym experience. Join INDIAN GYM K N RAJU FITNESS in Asilmetta, Vizag.";
 
 export const CONTACT = {
   phone: "8142113631",
@@ -11,13 +11,15 @@ export const CONTACT = {
   instagram: "indian_gym23",
   instagramUrl: "https://www.instagram.com/indian_gym23/",
   addressLines: [
-    "3rd Floor, CBM Compound",
-    "Near Timpany School",
-    "Rama Talkies Road, Srinagar",
-    "Visakhapatnam - 530016",
+    "3rd Floor, 9-1-245",
+    "Rama Talkies Rd, near Timpany School",
+    "CBM Compound, Asilmetta",
+    "Visakhapatnam, Andhra Pradesh 530003",
   ],
   address:
-    "3rd Floor, CBM Compound, Near Timpany School, Rama Talkies Road, Srinagar, Visakhapatnam-530016",
+    "3rd Floor, 9-1-245, Rama Talkies Rd, near Timpany School, CBM Compound, Asilmetta, Visakhapatnam, Andhra Pradesh 530003",
+  postalCode: "530003",
+  area: "Asilmetta",
   hours: {
     weekday: {
       label: "Monday - Saturday",
@@ -206,56 +208,6 @@ export const MEMBERSHIP_PLANS = [
   },
 ];
 
-export const TRAINERS = [
-  {
-    id: "1",
-    name: "K N Raju",
-    role: "Founder & Head Trainer",
-    specialty: "Bodybuilding & Strength",
-    experience: "15+ years",
-    image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=500&fit=crop",
-    bio: "Founder of INDIAN GYM with over 15 years of transforming lives through fitness.",
-  },
-  {
-    id: "2",
-    name: "Priya Sharma",
-    role: "Senior Fitness Coach",
-    specialty: "HIIT & Weight Loss",
-    experience: "8+ years",
-    image: "https://images.unsplash.com/photo-1594381898411-8465977c892e?w=400&h=500&fit=crop",
-    bio: "Specialized in high-intensity training and sustainable weight management.",
-  },
-  {
-    id: "3",
-    name: "Arjun Reddy",
-    role: "Strength Coach",
-    specialty: "Powerlifting & CrossFit",
-    experience: "10+ years",
-    image: "https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=400&h=500&fit=crop",
-    bio: "Competitive powerlifter helping members achieve peak strength.",
-  },
-  {
-    id: "4",
-    name: "Meera Patel",
-    role: "Yoga & Wellness Instructor",
-    specialty: "Yoga & Flexibility",
-    experience: "6+ years",
-    image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=500&fit=crop",
-    bio: "Certified yoga instructor focusing on mind-body wellness.",
-  },
-];
-
-export const GALLERY_IMAGES = [
-  { id: "1", src: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop", alt: "Gym floor" },
-  { id: "2", src: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&h=400&fit=crop", alt: "Weight training" },
-  { id: "3", src: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600&h=400&fit=crop", alt: "Cardio zone" },
-  { id: "4", src: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&h=400&fit=crop", alt: "Group class" },
-  { id: "5", src: "https://images.unsplash.com/photo-1540497077202-7a8b3d8e8f3e?w=600&h=400&fit=crop", alt: "Personal training" },
-  { id: "6", src: "https://images.unsplash.com/photo-1623874514711-0f321325f318?w=600&h=400&fit=crop", alt: "Locker room" },
-  { id: "7", src: "https://images.unsplash.com/photo-1576678927484-cc907957088c?w=600&h=400&fit=crop", alt: "Yoga session" },
-  { id: "8", src: "https://images.unsplash.com/photo-1593079831268-3381b0f4c77b?w=600&h=400&fit=crop", alt: "CrossFit area" },
-];
-
 export const TRANSFORMATIONS = [
   {
     id: "1",
@@ -283,45 +235,6 @@ export const TRANSFORMATIONS = [
     before: "https://images.unsplash.com/photo-1581009146145-b5ef050c149a?w=300&h=400&fit=crop",
     after: "https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=300&h=400&fit=crop",
     story: "From couch to marathon runner. The trainers here changed my life.",
-  },
-];
-
-export const BLOGS = [
-  {
-    id: "1",
-    title: "10 Essential Exercises for Beginners",
-    excerpt: "Start your fitness journey with these foundational movements.",
-    date: "2025-06-15",
-    category: "Training",
-    image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&h=350&fit=crop",
-    readTime: "5 min",
-  },
-  {
-    id: "2",
-    title: "Nutrition Tips for Muscle Building",
-    excerpt: "Learn what to eat before and after workouts for maximum gains.",
-    date: "2025-06-10",
-    category: "Nutrition",
-    image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&h=350&fit=crop",
-    readTime: "7 min",
-  },
-  {
-    id: "3",
-    title: "The Science of Recovery",
-    excerpt: "Why rest days are just as important as training days.",
-    date: "2025-06-05",
-    category: "Wellness",
-    image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=350&fit=crop",
-    readTime: "6 min",
-  },
-  {
-    id: "4",
-    title: "HIIT vs Steady-State Cardio",
-    excerpt: "Which cardio approach is right for your fitness goals?",
-    date: "2025-05-28",
-    category: "Training",
-    image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&h=350&fit=crop",
-    readTime: "8 min",
   },
 ];
 

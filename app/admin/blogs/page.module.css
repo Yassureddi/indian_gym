@@ -1,3 +1,25 @@
+.empty {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: 2rem 0;
+}
+
+.live,
+.hidden {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.live {
+  color: #4ade80;
+}
+
+.hidden {
+  color: #f87171;
+}
+
 .card {
   padding: 0 !important;
   overflow: hidden;

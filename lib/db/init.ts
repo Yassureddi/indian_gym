@@ -1,11 +1,11 @@
 import { ensureSeedUsers } from "./users";
 import { ensureSeedMemberships } from "./memberships";
-import { ensureSeedAttendance } from "./attendance";
-import { ensureSeedWorkoutPlans } from "./workout-plans";
-import { ensureSeedDietPlans } from "./diet-plans";
+import { ensureSeedWorkoutPlans } from "./workout-plans";import { ensureSeedDietPlans } from "./diet-plans";
 import { ensureSeedPayments } from "./payments";
-import { ensureSeedNotifications } from "./notifications";
 import { ensureSeedActivity } from "./activity";
+import { ensureSeedGallery } from "./gallery";
+import { ensureSeedTrainers } from "./trainers";
+import { ensureSeedBlogs } from "./blogs";
 
 let initialized = false;
 
@@ -13,11 +13,11 @@ export async function initializeDatabase() {
   if (initialized) return;
   await ensureSeedUsers();
   await ensureSeedMemberships();
-  await ensureSeedAttendance();
-  await ensureSeedWorkoutPlans();
-  await ensureSeedDietPlans();
+  await ensureSeedWorkoutPlans();  await ensureSeedDietPlans();
   await ensureSeedPayments();
-  await ensureSeedNotifications();
   await ensureSeedActivity();
+  await ensureSeedGallery();
+  await ensureSeedTrainers();
+  await ensureSeedBlogs();
   initialized = true;
 }

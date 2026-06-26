@@ -1,75 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
-import { initializeDatabase } from "@/lib/db/init";
-import { requireSession } from "@/lib/auth/session";
-import { updateUser, getUserByEmail, getUserByPhone, getUserById } from "@/lib/db/users";
-import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import { handleAuthError, jsonError } from "@/lib/auth/api";
+import { requireSession } from "@/lib/auth/session";
+import {
+  changeUserPassword,
+  getUserProfile,
+  updateUserProfile,
+} from "@/lib/auth/auth-service";
+import { mapUser } from "@/lib/api/mappers";
 
 export async function PATCH(request: NextRequest) {
   try {
-    await initializeDatabase();
     const session = await requireSession();
     const body = await request.json();
 
-    const updates: {
-      name?: string;
-      phone?: string;
-      email?: string;
-      goal?: string;
-      passwordHash?: string;
-    } = {};
-
-    if (body.name) updates.name = (body.name as string).trim();
-    if (body.goal !== undefined) updates.goal = (body.goal as string).trim();
-    if (body.phone) {
-      const phone = (body.phone as string).trim();
-      const existing = await getUserByPhone(phone);
-      if (existing && existing.id !== session.id) {
-        return jsonError("Phone number already in use", 400);
-      }
-      updates.phone = phone;
-    }
-    if (body.email) {
-      const email = (body.email as string).trim().toLowerCase();
-      const existing = await getUserByEmail(email);
-      if (existing && existing.id !== session.id) {
-        return jsonError("Email already in use", 400);
-      }
-      updates.email = email;
+    if (body.name || body.goal !== undefined || body.phone || body.email) {
+      const updated = await updateUserProfile(session.id, {
+        name: body.name ? String(body.name).trim() : undefined,
+        goal: body.goal !== undefined ? String(body.goal).trim() : undefined,
+        phone: body.phone ? String(body.phone).trim() : undefined,
+        email: body.email ? String(body.email).trim().toLowerCase() : undefined,
+      });
+      if (!updated) return jsonError("User not found", 404);
     }
 
     if (body.newPassword) {
       if (!body.currentPassword) {
         return jsonError("Current password is required", 400);
       }
-      const fullUser = await getUserById(session.id);
-      if (!fullUser) return jsonError("User not found", 404);
-
-      const valid = await verifyPassword(
-        body.currentPassword as string,
-        fullUser.passwordHash
+      const result = await changeUserPassword(
+        session.id,
+        body.currentPassword,
+        body.newPassword
       );
-      if (!valid) {
-        return jsonError("Current password is incorrect", 400);
-      }
-      updates.passwordHash = await hashPassword(body.newPassword as string);
+      if (!result.ok) return jsonError(result.error, 400);
     }
 
-    const updated = await updateUser(session.id, updates);
-    if (!updated) {
-      return jsonError("User not found", 404);
-    }
+    const user = await getUserProfile(session.id);
+    if (!user) return jsonError("User not found", 404);
 
-    return NextResponse.json({
-      user: {
-        id: updated.id,
-        email: updated.email,
-        phone: updated.phone,
-        name: updated.name,
-        role: updated.role,
-        goal: updated.goal,
-      },
-    });
+    return NextResponse.json({ user: mapUser(user) });
   } catch (error) {
     return handleAuthError(error);
   }

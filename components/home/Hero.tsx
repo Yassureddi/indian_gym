@@ -3,49 +3,78 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { motion } from "framer-motion";
+import { ensureGsapPlugins } from "@/lib/animations/gsap";
+import { useReducedMotion } from "@/lib/animations/useReducedMotion";
 import Logo from "@/components/brand/Logo";
 import Button from "@/components/ui/Button";
 import { HERO_HEADLINE, CONTACT, HERO_VIDEO, HERO_VIDEO_POSTER } from "@/lib/constants";
+import { BRAND } from "@/lib/branding";
 import styles from "./Hero.module.css";
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
+  const videoWrapRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
-  const logoRef = useRef<HTMLDivElement>(null);
+  const brandRef = useRef<HTMLDivElement>(null);
+  const copyRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
+    if (reducedMotion) return;
+
+    ensureGsapPlugins();
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
       tl.fromTo(
-        logoRef.current,
-        { opacity: 0, scale: 0.8, y: 30 },
+        brandRef.current,
+        { opacity: 0, scale: 0.9, y: 24 },
         { opacity: 1, scale: 1, y: 0, duration: 1 }
       )
         .fromTo(
+          copyRef.current,
+          { opacity: 0, x: 40 },
+          { opacity: 1, x: 0, duration: 0.9 },
+          "-=0.55"
+        )
+        .fromTo(
           headlineRef.current,
-          { opacity: 0, y: 60 },
-          { opacity: 1, y: 0, duration: 1.1 },
-          "-=0.6"
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 1 },
+          "-=0.65"
         )
         .fromTo(
           ctaRef.current?.children || [],
-          { opacity: 0, y: 40 },
-          { opacity: 1, y: 0, duration: 0.7, stagger: 0.12 },
-          "-=0.5"
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.65, stagger: 0.1 },
+          "-=0.45"
         );
+
+      if (videoWrapRef.current) {
+        gsap.to(videoWrapRef.current, {
+          yPercent: 18,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.5,
+          },
+        });
+      }
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [reducedMotion]);
 
   const phoneHref = `tel:+91${CONTACT.phone}`;
   const whatsappHref = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent("Hi! I'd like to know more about KN Raju Fitness.")}`;
 
   return (
     <section ref={sectionRef} className={styles.hero} aria-label="Hero">
-      <div className={styles.videoWrap}>
+      <div ref={videoWrapRef} className={styles.videoWrap}>
         <video
           className={styles.video}
           autoPlay
@@ -63,63 +92,73 @@ export default function Hero() {
       </div>
 
       <div className={styles.glowOrb} aria-hidden="true" />
-      <div className={styles.glowOrb2} aria-hidden="true" />
+      <div className={`${styles.glowOrb2} premium-glow-pulse`} aria-hidden="true" />
 
       <div className={`container ${styles.content}`}>
-        <div ref={logoRef} className={styles.logoWrap}>
-          <Logo variant="login" showText={false} href="/" />
+        <div ref={brandRef} className={styles.brandPanel}>
+          <div className={styles.logoFrame}>
+            <Logo variant="hero" showText={false} href="/" />
+          </div>
+          <div className={styles.brandMeta}>
+            <p className={styles.brandEyebrow}>Indian Gym</p>
+            <p className={styles.brandTitle}>{BRAND.shortName}</p>
+            <p className={styles.brandMotto}>Be Strong</p>
+            <p className={styles.brandLocation}>Visakhapatnam</p>
+          </div>
         </div>
 
-        <motion.span
-          className={styles.badge}
-          initial={{ opacity: 0, letterSpacing: "0.4em" }}
-          animate={{ opacity: 1, letterSpacing: "0.2em" }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-        >
-          Premium Fitness Experience
-        </motion.span>
-
-        <h1 ref={headlineRef} className={styles.headline}>
-          <span className={styles.headlineMain}>{HERO_HEADLINE}</span>
-        </h1>
-
-        <motion.p
-          className={styles.subline}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9, duration: 0.8 }}
-        >
-          Elite training. World-class equipment. A community that pushes you
-          beyond limits.
-        </motion.p>
-
-        <div ref={ctaRef} className={styles.cta}>
-          <Button href="/membership" variant="primary" size="lg">
-            Join Now
-          </Button>
-          <Button href="/free-trial" variant="outline" size="lg">
-            Book Free Trial
-          </Button>
-          <a href={phoneHref} className={styles.actionBtn}>
-            <PhoneIcon />
-            Call Now
-          </a>
-          <a
-            href={whatsappHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${styles.actionBtn} ${styles.whatsapp}`}
+        <div ref={copyRef} className={styles.copyPanel}>
+          <motion.span
+            className={styles.badge}
+            initial={{ opacity: 0, letterSpacing: "0.4em" }}
+            animate={{ opacity: 1, letterSpacing: "0.2em" }}
+            transition={{ delay: 0.4, duration: 0.8 }}
           >
-            <WhatsAppIcon />
-            WhatsApp
-          </a>
+            Premium Fitness Experience
+          </motion.span>
+
+          <h1 ref={headlineRef} className={styles.headline}>
+            <span className={styles.headlineMain}>{HERO_HEADLINE}</span>
+          </h1>
+
+          <motion.p
+            className={styles.subline}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.75, duration: 0.8 }}
+          >
+            Elite training. World-class equipment. A community that pushes you
+            beyond limits.
+          </motion.p>
+
+          <div ref={ctaRef} className={styles.cta}>
+            <Button href="/membership" variant="primary" size="lg">
+              Join Now
+            </Button>
+            <Button href="/free-trial" variant="outline" size="lg">
+              Book Free Trial
+            </Button>
+            <a href={phoneHref} className={styles.actionBtn}>
+              <PhoneIcon />
+              Call Now
+            </a>
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${styles.actionBtn} ${styles.whatsapp}`}
+            >
+              <WhatsAppIcon />
+              WhatsApp
+            </a>
+          </div>
         </div>
 
         <motion.div
-          className={styles.scrollIndicator}
+          className={`${styles.scrollIndicator} animate-scroll-hint`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.4 }}
+          transition={{ delay: 1.2 }}
         >
           <span>Discover</span>
           <div className={styles.scrollLine} />

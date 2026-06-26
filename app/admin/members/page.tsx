@@ -1,102 +1,70 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import MemberOnboardingWizard from "@/components/admin/MemberOnboardingWizard";
 import { AdminTable } from "@/components/admin/AdminTable";
-import Button from "@/components/ui/Button";
 import type { SessionUser } from "@/lib/auth/types";
 import shared from "@/components/admin/admin-shared.module.css";
+
+function formatDate(date?: string) {
+  if (!date) return "—";
+  return new Date(date).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
 
 export default function AdminMembersPage() {
   const [members, setMembers] = useState<SessionUser[]>([]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const load = () =>
     fetch("/api/admin/members")
       .then((r) => r.json())
       .then((d) => setMembers(d.members ?? []));
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
+  const handleSuccess = (msg: string) => {
+    setMessage(msg);
     setError("");
-    const fd = new FormData(e.currentTarget);
-    try {
-      const res = await fetch("/api/admin/members", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: fd.get("name"),
-          email: fd.get("email"),
-          phone: fd.get("phone"),
-          password: fd.get("password"),
-          goal: fd.get("goal"),
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setMessage("Member created successfully.");
-      e.currentTarget.reset();
-      load();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed");
-    } finally {
-      setLoading(false);
-    }
+    load();
   };
 
   return (
     <div>
       <AdminPageHeader
         title="Members"
-        description="Manage gym members, create accounts, and view member details."
+        description="Create members with service plan selection and payment in one workflow."
       />
       {message && <p className={`${shared.alert} ${shared.alertSuccess}`}>{message}</p>}
       {error && <p className={`${shared.alert} ${shared.alertError}`}>{error}</p>}
 
       <div className={shared.grid2}>
         <div className={shared.panel}>
-          <h3 style={{ marginBottom: "1rem", fontFamily: "var(--font-heading)" }}>Add Member</h3>
-          <form onSubmit={handleSubmit} className={shared.formGrid}>
-            <div className={shared.field}>
-              <label htmlFor="name">Full Name</label>
-              <input id="name" name="name" required />
-            </div>
-            <div className={shared.field}>
-              <label htmlFor="email">Email</label>
-              <input id="email" name="email" type="email" required />
-            </div>
-            <div className={shared.field}>
-              <label htmlFor="phone">Phone</label>
-              <input id="phone" name="phone" type="tel" required />
-            </div>
-            <div className={shared.field}>
-              <label htmlFor="password">Password</label>
-              <input id="password" name="password" type="password" minLength={6} required />
-            </div>
-            <div className={`${shared.field} ${shared.fullWidth}`}>
-              <label htmlFor="goal">Fitness Goal</label>
-              <input id="goal" name="goal" placeholder="e.g. Weight Loss" />
-            </div>
-            <div className={shared.fullWidth}>
-              <Button type="submit" variant="primary" disabled={loading}>
-                Create Member
-              </Button>
-            </div>
-          </form>
+          <h3 style={{ marginBottom: "1rem", fontFamily: "var(--font-heading)" }}>
+            New Member Registration
+          </h3>
+          <MemberOnboardingWizard
+            onSuccess={handleSuccess}
+            onError={setError}
+          />
         </div>
 
-        <AdminTable headers={["Name", "Email", "Phone", "Goal"]}>
+        <AdminTable headers={["Name", "ID", "Phone", "Gender", "Age", "Joined", "Goal"]}>
           {members.map((m) => (
             <tr key={m.id}>
               <td><strong>{m.name}</strong></td>
-              <td>{m.email}</td>
+              <td style={{ fontSize: "0.75rem", color: "var(--color-text-muted)" }}>{m.id}</td>
               <td>{m.phone}</td>
+              <td>{m.gender || "—"}</td>
+              <td>{m.age ?? "—"}</td>
+              <td>{formatDate(m.joiningDate)}</td>
               <td>{m.goal || "—"}</td>
             </tr>
           ))}

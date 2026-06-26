@@ -7,6 +7,7 @@ import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import Logo from "@/components/brand/Logo";
 import { SITE_SHORT_NAME } from "@/lib/constants";
+import PasswordInput from "@/components/ui/PasswordInput";
 import styles from "./LoginForm.module.css";
 
 export default function LoginForm() {
@@ -52,7 +53,9 @@ export default function LoginForm() {
       <div className={styles.bgGlow} aria-hidden="true" />
       <GlassCard className={styles.card} hover={false} padding="lg">
         <div className={styles.header}>
-          <Logo variant="login" showText={false} />
+          <div className={styles.loginLogo}>
+            <Logo variant="login" showText={false} />
+          </div>
           <h1 className="text-h3">Welcome Back</h1>
           <p className="text-body-sm">Sign in to your {SITE_SHORT_NAME} account</p>
         </div>
@@ -73,10 +76,9 @@ export default function LoginForm() {
           </div>
           <div className={styles.field}>
             <label htmlFor="login-password">Password</label>
-            <input
+            <PasswordInput
               id="login-password"
               name="password"
-              type="password"
               required
               placeholder="Enter password"
               autoComplete="current-password"

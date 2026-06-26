@@ -1,6 +1,7 @@
-import { BLOGS, FAQS, SITE_NAME, CONTACT } from "@/lib/constants";
+import { FAQS, SITE_NAME, CONTACT } from "@/lib/constants";
+import type { BlogItem } from "@/lib/blog";
+import type { Trainer } from "@/lib/trainers";
 import { MEMBERSHIP_PLANS } from "@/lib/membership";
-import { TRAINERS } from "@/lib/trainers";
 import {
   SITE_URL,
   SEO_DEFAULTS,
@@ -17,7 +18,7 @@ export function organizationSchema() {
     "@id": `${SITE_URL}/#organization`,
     name: SITE_NAME,
     url: SITE_URL,
-    logo: `${SITE_URL}/brand/logo.svg`,
+    logo: `${SITE_URL}/brand/logo.png`,
     description: SEO_DEFAULTS.description,
     sameAs: getSocialProfiles(),
     contactPoint: {
@@ -61,7 +62,7 @@ export function localBusinessSchema() {
     url: SITE_URL,
     image: [
       "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&h=800&fit=crop",
-      `${SITE_URL}/brand/logo.svg`,
+      `${SITE_URL}/brand/logo.png`,
     ],
     telephone: `+91-${CONTACT.phone}`,
     email: `info@${new URL(SITE_URL).hostname}`,
@@ -109,7 +110,7 @@ export function faqPageSchema() {
   };
 }
 
-export function articleSchema(blog: (typeof BLOGS)[number]) {
+export function articleSchema(blog: Pick<BlogItem, "id" | "title" | "excerpt" | "image" | "date">) {
   return {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -128,7 +129,7 @@ export function articleSchema(blog: (typeof BLOGS)[number]) {
       name: SITE_NAME,
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/brand/logo.svg`,
+        url: `${SITE_URL}/brand/logo.png`,
       },
     },
     mainEntityOfPage: {
@@ -164,19 +165,26 @@ export function serviceListSchema() {
 }
 
 export function membershipOfferSchema() {
+  const offers = MEMBERSHIP_PLANS.flatMap((plan) =>
+    plan.categories.map((category) => ({
+      plan,
+      category,
+    }))
+  );
+
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "Gym Membership Plans",
-    itemListElement: MEMBERSHIP_PLANS.map((plan, i) => ({
+    itemListElement: offers.map(({ plan, category }, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {
         "@type": "Offer",
-        name: `${plan.name} Membership`,
-        price: plan.price,
+        name: `${plan.name} · ${category.name}`,
+        price: category.price,
         priceCurrency: "INR",
-        description: plan.features.join(". "),
+        description: category.features.join(". "),
         seller: { "@id": `${SITE_URL}/#gym` },
         url: absoluteUrl("/membership"),
       },
@@ -184,12 +192,12 @@ export function membershipOfferSchema() {
   };
 }
 
-export function trainersListSchema() {
+export function trainersListSchema(trainers: Trainer[]) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "Gym Trainers",
-    itemListElement: TRAINERS.map((trainer, i) => ({
+    itemListElement: trainers.map((trainer, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {

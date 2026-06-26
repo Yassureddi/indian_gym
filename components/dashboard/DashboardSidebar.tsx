@@ -9,7 +9,6 @@ import styles from "./DashboardSidebar.module.css";
 const MEMBER_LINKS = [
   { href: "/dashboard", label: "Overview", icon: "◆" },
   { href: "/dashboard/profile", label: "Profile", icon: "◇" },
-  { href: "/dashboard/attendance", label: "Attendance", icon: "◈" },
   { href: "/dashboard/membership", label: "Membership", icon: "◉" },
   { href: "/dashboard/workout-plans", label: "Workout Plans", icon: "◎" },
   { href: "/dashboard/diet-plans", label: "Diet Plans", icon: "○" },

@@ -4,7 +4,6 @@ import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  GALLERY_IMAGES,
   GALLERY_FILTERS,
   CATEGORY_LABELS,
   type GalleryCategory,
@@ -12,14 +11,30 @@ import {
 } from "@/lib/gallery";
 import styles from "./GalleryGrid.module.css";
 
+function isRemoteSrc(src: string) {
+  return src.startsWith("http");
+}
+
 export default function GalleryGrid() {
+  const [images, setImages] = useState<GalleryItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<GalleryCategory | "all">("all");
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
+  useEffect(() => {
+    fetch("/api/gallery")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data.items) && data.items.length > 0) {
+          setImages(data.items);
+        }
+      })
+      .catch(() => setImages([]))
+      .finally(() => setLoading(false));
+  }, []);
+
   const filtered =
-    filter === "all"
-      ? GALLERY_IMAGES
-      : GALLERY_IMAGES.filter((img) => img.category === filter);
+    filter === "all" ? images : images.filter((img) => img.category === filter);
 
   const selectedImage = selectedIndex !== null ? filtered[selectedIndex] : null;
 
@@ -58,6 +73,10 @@ export default function GalleryGrid() {
     setSelectedIndex(null);
   }, [filter]);
 
+  if (loading) {
+    return <p className={styles.empty}>Loading gallery...</p>;
+  }
+
   return (
     <>
       <div className={styles.filters} role="tablist" aria-label="Gallery filters">
@@ -84,7 +103,7 @@ export default function GalleryGrid() {
       >
         <AnimatePresence mode="popLayout">
           {filtered.map((image, index) => (
-            <GalleryItem
+            <GalleryItemCard
               key={image.id}
               image={image}
               index={index}
@@ -114,7 +133,7 @@ export default function GalleryGrid() {
   );
 }
 
-function GalleryItem({
+function GalleryItemCard({
   image,
   index,
   onOpen,
@@ -141,6 +160,7 @@ function GalleryItem({
         loading="lazy"
         sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 33vw"
         className={styles.image}
+        unoptimized={!isRemoteSrc(image.src)}
       />
       <div className={styles.overlay}>
         <span className={styles.category}>{CATEGORY_LABELS[image.category]}</span>
@@ -207,6 +227,7 @@ function Lightbox({
             height={800}
             className={styles.lightboxImage}
             priority
+            unoptimized={!isRemoteSrc(image.src)}
           />
         </div>
 

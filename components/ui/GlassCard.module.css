@@ -8,6 +8,7 @@
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
+  isolation: isolate;
 }
 
 .card::before {
@@ -32,8 +33,12 @@
 .hover:hover {
   background: var(--color-glass-hover);
   border-color: var(--color-glass-border-hover);
-  transform: translateY(-4px);
+  transform: translateY(-5px) scale(1.012);
   box-shadow: var(--shadow-card-hover);
+}
+
+.hover {
+  will-change: transform;
 }
 
 .sm {

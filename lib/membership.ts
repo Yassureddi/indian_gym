@@ -1,14 +1,37 @@
 export type BillingPeriod = "monthly" | "quarterly" | "half-yearly" | "yearly";
 
+export type MembershipCategory = "strength" | "cardio-strength";
+
+export const STRENGTH_FEATURES = [
+  "Unlimited Strength Training",
+  "Professional Trainer Guidance",
+  "Free Fitness Assessment",
+  "Access During Gym Timings",
+  "Locker Facility",
+] as const;
+
+export const CARDIO_STRENGTH_FEATURES = [
+  "Unlimited Strength Training",
+  "Unlimited Cardio Access",
+  "Professional Trainer Guidance",
+  "Free Fitness Assessment",
+  "Access During Gym Timings",
+  "Locker Facility",
+] as const;
+
+export interface MembershipCategoryOption {
+  id: MembershipCategory;
+  name: string;
+  price: number;
+  features: readonly string[];
+}
+
 export interface MembershipPlan {
   id: BillingPeriod;
   name: string;
   period: string;
-  price: number;
-  originalPrice?: number;
-  savings?: string;
   popular: boolean;
-  features: string[];
+  categories: MembershipCategoryOption[];
 }
 
 export const MEMBERSHIP_PLANS: MembershipPlan[] = [
@@ -16,66 +39,80 @@ export const MEMBERSHIP_PLANS: MembershipPlan[] = [
     id: "monthly",
     name: "Monthly",
     period: "per month",
-    price: 2999,
     popular: false,
-    features: [
-      "Unlimited gym floor access",
-      "All group classes included",
-      "Locker & shower facilities",
-      "Air-conditioned training zones",
-      "Ladies & gents separate areas",
-      "Basic fitness assessment",
+    categories: [
+      {
+        id: "strength",
+        name: "Strength Training",
+        price: 1500,
+        features: STRENGTH_FEATURES,
+      },
+      {
+        id: "cardio-strength",
+        name: "Cardio + Strength Training",
+        price: 2000,
+        features: CARDIO_STRENGTH_FEATURES,
+      },
     ],
   },
   {
     id: "quarterly",
     name: "Quarterly",
     period: "per 3 months",
-    price: 7999,
-    originalPrice: 8997,
-    savings: "Save 11%",
     popular: false,
-    features: [
-      "Everything in Monthly",
-      "Sauna & steam room access",
-      "Nutrition consultation (1 session)",
-      "Priority class booking",
-      "Free gym bag & towel",
-      "Progress tracking app access",
+    categories: [
+      {
+        id: "strength",
+        name: "Strength Training",
+        price: 3500,
+        features: STRENGTH_FEATURES,
+      },
+      {
+        id: "cardio-strength",
+        name: "Cardio + Strength Training",
+        price: 4500,
+        features: CARDIO_STRENGTH_FEATURES,
+      },
     ],
   },
   {
     id: "half-yearly",
     name: "Half Yearly",
     period: "per 6 months",
-    price: 14999,
-    originalPrice: 17994,
-    savings: "Save 17%",
     popular: true,
-    features: [
-      "Everything in Quarterly",
-      "2 personal training sessions",
-      "Body composition analysis",
-      "Custom workout plan",
-      "Guest pass (1 per month)",
-      "Free protein shaker kit",
+    categories: [
+      {
+        id: "strength",
+        name: "Strength Training",
+        price: 6500,
+        features: STRENGTH_FEATURES,
+      },
+      {
+        id: "cardio-strength",
+        name: "Cardio + Strength Training",
+        price: 8500,
+        features: CARDIO_STRENGTH_FEATURES,
+      },
     ],
   },
   {
     id: "yearly",
     name: "Yearly",
     period: "per year",
-    price: 24999,
-    originalPrice: 35988,
-    savings: "Save 31%",
     popular: false,
-    features: [
-      "Everything in Half Yearly",
-      "8 personal training sessions",
-      "24/7 gym access",
-      "Guest passes (2 per month)",
-      "Annual health checkup",
-      "VIP locker & priority support",
+    categories: [
+      {
+        id: "strength",
+        name: "Strength Training",
+        price: 12000,
+        features: STRENGTH_FEATURES,
+      },
+      {
+        id: "cardio-strength",
+        name: "Cardio + Strength Training",
+        price: 16000,
+        features: CARDIO_STRENGTH_FEATURES,
+      },
     ],
   },
 ];
@@ -94,3 +131,47 @@ export const PAYMENT_MODES = [
     icon: "cash" as const,
   },
 ];
+
+export function buildPlanCompositeId(
+  period: BillingPeriod,
+  category: MembershipCategory
+): string {
+  return `${period}:${category}`;
+}
+
+export function parsePlanCompositeId(
+  compositeId: string
+): { period: BillingPeriod; category: MembershipCategory } | null {
+  const [period, category] = compositeId.split(":");
+  if (
+    !period ||
+    !category ||
+    !MEMBERSHIP_PLANS.some((p) => p.id === period) ||
+    !["strength", "cardio-strength"].includes(category)
+  ) {
+    return null;
+  }
+  return {
+    period: period as BillingPeriod,
+    category: category as MembershipCategory,
+  };
+}
+
+export function getPlanSelection(period: BillingPeriod, category: MembershipCategory) {
+  const plan = MEMBERSHIP_PLANS.find((p) => p.id === period);
+  const categoryOption = plan?.categories.find((c) => c.id === category);
+  if (!plan || !categoryOption) return null;
+
+  return {
+    period,
+    category,
+    compositeId: buildPlanCompositeId(period, category),
+    billingName: plan.name,
+    categoryName: categoryOption.name,
+    fullName: `${plan.name} · ${categoryOption.name}`,
+    price: categoryOption.price,
+    features: categoryOption.features,
+    periodLabel: plan.period,
+    popular: plan.popular,
+  };
+}

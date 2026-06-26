@@ -20,31 +20,49 @@ export default function Logo({
   className,
   href = "/",
 }: LogoProps) {
-  const [imgSrc, setImgSrc] = useState(BRAND.logo.src);
+  const logoAsset = variant === "login" ? BRAND.loginLogo : BRAND.logo;
+  const [imgSrc, setImgSrc] = useState(logoAsset.src);
   const size = LOGO_SIZES[variant];
 
-  const image = (
-    <Image
+  const isSvg = imgSrc.endsWith(".svg");
+
+  const image = isSvg ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
       src={imgSrc}
-      alt={BRAND.logo.alt}
+      alt={logoAsset.alt}
       width={size.width}
       height={size.height}
       className={styles.image}
-      priority={variant === "navbar"}
-      onError={() => setImgSrc(BRAND.logo.fallback)}
+      onError={() => setImgSrc(logoAsset.fallback)}
+    />
+  ) : (
+    <Image
+      src={imgSrc}
+      alt={logoAsset.alt}
+      width={size.width}
+      height={size.height}
+      className={styles.image}
+      priority={variant === "navbar" || variant === "hero" || variant === "login"}
+      onError={() => setImgSrc(logoAsset.fallback)}
     />
   );
 
   const content = (
     <>
       <span className={cn(styles.mark, styles[variant])}>{image}</span>
-      {showText && variant !== "icon" && (
+      {showText && variant !== "icon" && variant !== "hero" && (
         <span className={cn(styles.text, styles[`text_${variant}`])}>
           <span className={styles.name}>
             {variant === "footer" ? BRAND.name : BRAND.shortName}
           </span>
           {variant !== "login" && (
-            <span className={styles.tagline}>Indian Gym</span>
+            <>
+              <span className={styles.tagline}>Indian Gym</span>
+              {variant === "navbar" && (
+                <span className={styles.motto}>Be Strong</span>
+              )}
+            </>
           )}
         </span>
       )}

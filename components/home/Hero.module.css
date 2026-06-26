@@ -23,25 +23,25 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.55) 0%,
-    rgba(0, 0, 0, 0.72) 45%,
-    rgba(0, 0, 0, 0.92) 100%
+    105deg,
+    rgba(0, 0, 0, 0.88) 0%,
+    rgba(0, 0, 0, 0.72) 42%,
+    rgba(0, 0, 0, 0.55) 100%
   );
 }
 
 .vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.65) 100%);
+  background: radial-gradient(ellipse at 20% 50%, transparent 30%, rgba(0, 0, 0, 0.55) 100%);
 }
 
 .glowOrb {
   position: absolute;
-  top: 15%;
-  right: 8%;
-  width: 420px;
-  height: 420px;
+  top: 12%;
+  left: 8%;
+  width: 380px;
+  height: 380px;
   background: radial-gradient(circle, var(--color-gold-glow), transparent 70%);
   border-radius: 50%;
   filter: blur(80px);
@@ -52,10 +52,10 @@
 
 .glowOrb2 {
   position: absolute;
-  bottom: 10%;
-  left: 5%;
-  width: 300px;
-  height: 300px;
+  bottom: 8%;
+  right: 6%;
+  width: 320px;
+  height: 320px;
   background: radial-gradient(circle, rgba(212, 175, 55, 0.12), transparent 70%);
   filter: blur(60px);
   z-index: 1;
@@ -78,18 +78,79 @@
 .content {
   position: relative;
   z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: center;
+  width: 100%;
+  padding: 2.5rem 0 4.5rem;
   text-align: center;
-  padding: 3rem 0 4rem;
 }
 
-.logoWrap {
+.brandPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.logoFrame {
+  position: relative;
   display: flex;
   justify-content: center;
-  margin-bottom: 1.5rem;
 }
 
-.logoWrap a {
-  pointer-events: auto;
+.logoFrame::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: calc(var(--radius-lg) + 8px);
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.18), transparent 70%);
+  pointer-events: none;
+}
+
+.brandMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.brandEyebrow {
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.brandTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+.brandMotto {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold-light);
+}
+
+.brandLocation {
+  font-size: var(--text-body-sm);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.copyPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .badge {
@@ -104,22 +165,23 @@
   text-transform: uppercase;
   color: var(--color-secondary);
   backdrop-filter: var(--glass-blur);
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
 }
 
 .headline {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
+  max-width: 720px;
 }
 
 .headlineMain {
   display: block;
   font-family: var(--font-display);
-  font-size: clamp(2.75rem, 8vw, 5.5rem);
+  font-size: clamp(2.25rem, 6.5vw, 4.75rem);
   font-weight: 400;
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  background: linear-gradient(180deg, #ffffff 0%, #f0d78c 45%, #d4af37 100%);
+  background: var(--gradient-gold-text);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -127,10 +189,10 @@
 }
 
 .subline {
-  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-size: clamp(1rem, 2vw, 1.15rem);
   color: var(--color-text-muted);
-  max-width: 560px;
-  margin: 0 auto 2.75rem;
+  max-width: 540px;
+  margin: 0 auto 2.25rem;
   line-height: var(--leading-relaxed);
 }
 
@@ -138,7 +200,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.875rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
   max-width: 720px;
   margin: 0 auto;
@@ -176,7 +238,7 @@
 
 .scrollIndicator {
   position: absolute;
-  bottom: 2rem;
+  bottom: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -208,6 +270,50 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .content {
+    grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+    gap: clamp(2rem, 4vw, 4rem);
+    text-align: left;
+    align-items: center;
+    padding: 3rem 0 4rem;
+  }
+
+  .brandPanel {
+    align-items: center;
+    justify-self: start;
+  }
+
+  .brandMeta {
+    align-items: center;
+  }
+
+  .copyPanel {
+    align-items: flex-start;
+    justify-self: stretch;
+  }
+
+  .badge {
+    margin-bottom: 1.25rem;
+  }
+
+  .headline {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .subline {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .cta {
+    justify-content: flex-start;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 @media (max-width: 640px) {
   .cta {
     flex-direction: column;
@@ -222,5 +328,10 @@
 
   .actionBtn {
     width: 100%;
+  }
+
+  .content {
+    padding-top: 1.5rem;
+    gap: 1.5rem;
   }
 }

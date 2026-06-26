@@ -13,7 +13,15 @@ export function toSessionUser(user: User): SessionUser {
     role: user.role,
     avatar: user.avatar,
     goal: user.goal,
+    gender: user.gender,
+    age: user.age,
+    joiningDate: user.joiningDate,
   };
+}
+
+export async function getMembers(): Promise<User[]> {
+  const users = await getUsers();
+  return users.filter((u) => u.role === "member");
 }
 
 export async function getUsers(): Promise<User[]> {
@@ -53,7 +61,9 @@ export async function findUserByLogin(login: string): Promise<User | null> {
 
 export async function updateUser(
   id: string,
-  updates: Partial<Pick<User, "name" | "phone" | "email" | "goal" | "avatar" | "passwordHash">>
+  updates: Partial<
+    Pick<User, "name" | "phone" | "email" | "goal" | "avatar" | "passwordHash" | "gender" | "age" | "joiningDate">
+  >
 ): Promise<User | null> {
   const users = await getUsers();
   const index = users.findIndex((u) => u.id === id);
@@ -75,6 +85,9 @@ export async function createUser(data: {
   password: string;
   role: User["role"];
   goal?: string;
+  gender?: string;
+  age?: number;
+  joiningDate?: string;
 }): Promise<User> {
   const users = await getUsers();
   const now = new Date().toISOString();
@@ -86,6 +99,9 @@ export async function createUser(data: {
     passwordHash: await hashPassword(data.password),
     role: data.role,
     goal: data.goal,
+    gender: data.gender,
+    age: data.age,
+    joiningDate: data.joiningDate,
     createdAt: now,
     updatedAt: now,
   };
@@ -121,6 +137,9 @@ export async function ensureSeedUsers() {
       passwordHash: memberHash,
       role: "member",
       goal: "Muscle Gain",
+      gender: "Male",
+      age: 28,
+      joiningDate: now.split("T")[0],
       createdAt: now,
       updatedAt: now,
     },

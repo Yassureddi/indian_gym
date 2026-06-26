@@ -9,24 +9,31 @@ import styles from "./AdminShell.module.css";
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [user, setUser] = useState<SessionUser | null>(null);
-  const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    Promise.all([
-      fetch("/api/auth/me").then((r) => (r.ok ? r.json() : Promise.reject())),
-      fetch("/api/admin/overview").then((r) => (r.ok ? r.json() : null)),
-    ])
-      .then(([authData, overview]) => {
+    fetch("/api/auth/me")
+      .then(async (r) => {
+        const data = await r.json();
+        if (!r.ok) {
+          if (r.status === 401) throw new Error("unauthorized");
+          throw new Error(data.error || "Failed to load session");
+        }
+        return data;
+      })
+      .then((authData) => {
         if (authData.user.role !== "admin") {
           router.replace("/dashboard");
           return;
         }
         setUser(authData.user);
-        setUnreadCount(overview?.stats?.unreadNotifications ?? 0);
       })
-      .catch(() => router.replace("/login"))
+      .catch((err) => {
+        if (err instanceof Error && err.message === "unauthorized") {
+          router.replace("/login?redirect=/admin");
+        }
+      })
       .finally(() => setLoading(false));
   }, [router]);
 
@@ -51,7 +58,6 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     <div className={styles.shell}>
       <AdminSidebar
         user={user}
-        unreadCount={unreadCount}
         onLogout={handleLogout}
         mobileOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}

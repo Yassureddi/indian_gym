@@ -1,0 +1,30 @@
+import { Router } from "express";
+import { validate } from "../middleware/validate.middleware.js";
+import { authenticate, adminOnly } from "../middleware/auth.middleware.js";
+import {
+  listMembers,
+  getMember,
+  createMember,
+  updateMember,
+  deleteMember,
+  getMemberMembership,
+} from "../controllers/member.controller.js";
+import {
+  memberIdValidator,
+  listMembersValidator,
+  createMemberValidator,
+  updateMemberValidator,
+} from "../validators/member.validator.js";
+
+const router = Router();
+
+router.use(authenticate, adminOnly);
+
+router.get("/", listMembersValidator, validate, listMembers);
+router.post("/", createMemberValidator, validate, createMember);
+router.get("/:id", memberIdValidator, validate, getMember);
+router.put("/:id", updateMemberValidator, validate, updateMember);
+router.delete("/:id", memberIdValidator, validate, deleteMember);
+router.get("/:id/membership", memberIdValidator, validate, getMemberMembership);
+
+export default router;

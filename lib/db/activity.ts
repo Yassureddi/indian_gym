@@ -41,7 +41,7 @@ export async function ensureSeedActivity() {
     {
       id: createId("act"),
       type: "payment",
-      message: "Payment of ₹14,999 received via UPI from Demo Member",
+      message: "Payment of ₹8,500 received via UPI from Demo Member",
       userId: "user_member_demo",
       createdAt: new Date(now - 7200000).toISOString(),
     },
@@ -62,7 +62,7 @@ export async function ensureSeedActivity() {
     {
       id: createId("act"),
       type: "membership",
-      message: "Half Yearly membership activated for Demo Member",
+      message: "Half Yearly · Cardio + Strength Training membership activated for Demo Member",
       userId: "user_member_demo",
       createdAt: new Date(now - 259200000).toISOString(),
     },

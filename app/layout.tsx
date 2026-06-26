@@ -9,7 +9,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   ...createMetadata({
     title: "Home",
-    description: `${SITE_DESCRIPTION} Located in Srinagar, Visakhapatnam. Premium gym with personal training, membership plans from ₹2,999/month.`,
+    description: `${SITE_DESCRIPTION} Located in Asilmetta, Visakhapatnam. Premium gym with personal training, membership plans from ₹2,999/month.`,
     path: "/",
   }),
   manifest: "/manifest.json",

@@ -1,18 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { initializeDatabase } from "@/lib/db/init";
 import { requireAdmin } from "@/lib/auth/session";
-import { getPayments, savePayment } from "@/lib/db/payments";
-import { logActivity } from "@/lib/db/activity";
-import { createId } from "@/lib/db/store";
 import { handleAuthError, jsonError } from "@/lib/auth/api";
-import type { PaymentMethod, PaymentStatus } from "@/lib/admin/types";
+import { initializeDatabase } from "@/lib/db/init";
+import { createPayment, getPayments } from "@/lib/db/payments";
+import { mapPayment } from "@/lib/api/mappers";
+import type { Payment } from "@/lib/admin/types";
 
 export async function GET() {
   try {
-    await initializeDatabase();
     await requireAdmin();
+    await initializeDatabase();
     const payments = await getPayments();
-    return NextResponse.json({ payments });
+    return NextResponse.json({ payments: payments.map(mapPayment) });
   } catch (error) {
     return handleAuthError(error);
   }
@@ -20,33 +19,25 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    await initializeDatabase();
     await requireAdmin();
-
+    await initializeDatabase();
     const body = await request.json();
-    const payment = {
-      id: createId("pay"),
-      userId: body.userId as string,
-      memberName: (body.memberName as string).trim(),
+
+    const payment = await createPayment({
+      userId: body.userId ? String(body.userId) : "",
+      membershipId: body.membershipId ? String(body.membershipId) : "",
+      memberName: String(body.memberName).trim(),
       amount: Number(body.amount),
-      method: body.method as PaymentMethod,
-      status: (body.status as PaymentStatus) || "completed",
-      planName: (body.planName as string).trim(),
+      method: body.method as Payment["method"],
+      status: (body.status || "completed") as Payment["status"],
+      planId: body.planId ? String(body.planId) : "",
+      planName: String(body.planName).trim(),
+      membershipDuration: body.membershipDuration ? String(body.membershipDuration) : "",
       date: body.date || new Date().toISOString().split("T")[0],
-      reference: body.reference as string | undefined,
-    };
+      reference: body.reference,
+    });
 
-    if (!payment.memberName || !payment.amount || !payment.planName) {
-      return jsonError("Member name, amount, and plan are required", 400);
-    }
-
-    await savePayment(payment);
-    await logActivity(
-      "payment",
-      `Payment of ₹${payment.amount.toLocaleString("en-IN")} recorded for ${payment.memberName}`
-    );
-
-    return NextResponse.json({ payment }, { status: 201 });
+    return NextResponse.json({ payment: mapPayment(payment) }, { status: 201 });
   } catch (error) {
     return handleAuthError(error);
   }
