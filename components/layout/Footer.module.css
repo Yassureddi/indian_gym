@@ -37,7 +37,17 @@
 }
 
 .logoBrand {
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.brandName {
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.35;
+  margin-bottom: 0.75rem;
+  max-width: 260px;
 }
 
 .tagline {

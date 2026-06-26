@@ -18,7 +18,8 @@ export default function Footer() {
       <div className="container">
         <div className={styles.grid}>
           <div className={styles.brand}>
-            <Logo variant="footer" href="/" className={styles.logoBrand} />
+            <Logo variant="footer" href="/" showText={false} className={styles.logoBrand} />
+            <p className={styles.brandName}>{SITE_NAME}</p>
             <p className={styles.tagline}>{SITE_TAGLINE}</p>
             <div className={styles.social}>
               {SOCIAL_LINKS.map((social) => (

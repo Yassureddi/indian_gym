@@ -18,74 +18,63 @@
   flex-shrink: 0;
   overflow: hidden;
   line-height: 0;
-  background: #ffffff;
-  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: transparent;
+  border: 1px solid rgba(212, 175, 55, 0.35);
   box-sizing: border-box;
 }
 
-.mark.navbar {
-  background: #000000;
-}
-
 .navbar {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  min-height: 44px;
-  max-height: calc(var(--header-height) - 20px);
-  padding: 3px;
-  border-radius: 50%;
-  background: #000000;
-  border: 2px solid rgba(212, 175, 55, 0.55);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  width: 48px;
+  height: 54px;
+  min-width: 48px;
+  min-height: 54px;
+  max-height: calc(var(--header-height) - 16px);
+  padding: 2px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
 }
 
 .footer {
-  width: 50px;
-  height: 58px;
-  min-width: 50px;
-  min-height: 58px;
+  width: 72px;
+  height: 81px;
+  min-width: 72px;
+  min-height: 81px;
   padding: 3px;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-md);
+  border-color: rgba(212, 175, 55, 0.45);
+  box-shadow: var(--shadow-gold);
 }
 
 .login {
-  width: 180px;
-  height: 180px;
-  min-width: 180px;
+  width: clamp(160px, 42vw, 200px);
+  height: clamp(180px, 47vw, 225px);
+  min-width: 160px;
   min-height: 180px;
-  padding: 6px;
+  padding: 4px;
   border-radius: var(--radius-lg);
-  background: #ffffff;
   border: 2px solid rgba(212, 175, 55, 0.5);
   box-shadow: var(--shadow-gold-lg);
 }
 
-.mark.login {
-  background: #ffffff;
-}
-
 .hero {
-  width: clamp(140px, 22vw, 200px);
-  height: clamp(162px, 25vw, 232px);
-  min-width: 140px;
-  min-height: 162px;
-  padding: 8px;
+  width: clamp(180px, 28vw, 240px);
+  height: clamp(203px, 31.5vw, 270px);
+  min-width: 180px;
+  min-height: 203px;
+  padding: 6px;
   border-radius: var(--radius-lg);
-  border-width: 2px;
-  border-color: rgba(212, 175, 55, 0.55);
+  border: 2px solid rgba(212, 175, 55, 0.55);
   box-shadow:
     var(--shadow-gold-lg),
-    0 0 60px rgba(212, 175, 55, 0.15),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    0 0 60px rgba(212, 175, 55, 0.15);
 }
 
 .icon {
-  width: 34px;
-  height: 40px;
-  min-width: 34px;
-  min-height: 40px;
+  width: 40px;
+  height: 45px;
+  min-width: 40px;
+  min-height: 45px;
   padding: 2px;
   border-radius: 6px;
 }
@@ -173,7 +162,7 @@
   width: fit-content;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1279px) {
   .text_navbar {
     display: none;
   }
@@ -185,9 +174,9 @@
 
 @media (max-width: 768px) {
   .navbar {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    min-height: 40px;
+    width: 42px;
+    height: 47px;
+    min-width: 42px;
+    min-height: 47px;
   }
 }

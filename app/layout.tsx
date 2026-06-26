@@ -14,8 +14,8 @@ export const metadata: Metadata = {
   }),
   manifest: "/manifest.json",
   icons: {
-    icon: [{ url: "/brand/logo.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/brand/logo.svg", type: "image/svg+xml" }],
+    icon: [{ url: "/brand/be-strong-logo.png", type: "image/png" }],
+    apple: [{ url: "/brand/be-strong-logo.png", type: "image/png" }],
   },
 };
 

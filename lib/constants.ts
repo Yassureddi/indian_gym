@@ -45,11 +45,13 @@ export const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
-  { href: "/membership", label: "Membership" },
+  { href: "/membership", label: "Membership Plans" },
   { href: "/trainers", label: "Trainers" },
   { href: "/gallery", label: "Gallery" },
-  { href: "/transformation", label: "Transformation" },
+  { href: "/transformation", label: "Transformations" },
+  { href: "/bmi-calculator", label: "BMI Calculator" },
   { href: "/blogs", label: "Blogs" },
+  { href: "/faqs", label: "FAQs" },
   { href: "/contact", label: "Contact" },
 ];
 

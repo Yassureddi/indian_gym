@@ -12,9 +12,9 @@
   "categories": ["fitness", "health", "lifestyle"],
   "icons": [
     {
-      "src": "/brand/logo.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/brand/be-strong-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]

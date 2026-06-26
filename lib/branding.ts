@@ -3,13 +3,13 @@ export const BRAND = {
   shortName: "KN Raju Fitness",
   tagline: "Transform Your Body, Elevate Your Life",
   logo: {
-    src: "/brand/logo.svg",
-    fallback: "/brand/logo.svg",
-    alt: "KN Raju Fitness — Be Strong logo",
+    src: "/brand/be-strong-logo.png",
+    fallback: "/brand/be-strong-logo.png",
+    alt: "KN Raju Fitness — Be Strong bull logo",
   },
   loginLogo: {
-    src: "/brand/login-logo.png",
-    fallback: "/brand/login-logo.png",
+    src: "/brand/be-strong-logo.png",
+    fallback: "/brand/be-strong-logo.png",
     alt: "KN Raju Fitness — Be Strong",
   },
   colors: {
@@ -24,9 +24,9 @@ export const BRAND = {
 export type LogoVariant = "navbar" | "footer" | "login" | "hero" | "icon";
 
 export const LOGO_SIZES: Record<LogoVariant, { width: number; height: number }> = {
-  navbar: { width: 44, height: 44 },
-  footer: { width: 50, height: 58 },
-  login: { width: 180, height: 180 },
-  hero: { width: 200, height: 232 },
-  icon: { width: 34, height: 40 },
+  navbar: { width: 48, height: 54 },
+  footer: { width: 72, height: 81 },
+  login: { width: 200, height: 225 },
+  hero: { width: 240, height: 270 },
+  icon: { width: 40, height: 45 },
 };
