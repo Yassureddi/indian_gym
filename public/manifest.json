@@ -1,0 +1,21 @@
+{
+  "name": "INDIAN GYM K N RAJU FITNESS",
+  "short_name": "KN Raju Fitness",
+  "description": "Premium fitness studio in Visakhapatnam — Transform Your Body, Elevate Your Life",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "lang": "en-IN",
+  "categories": ["fitness", "health", "lifestyle"],
+  "icons": [
+    {
+      "src": "/brand/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

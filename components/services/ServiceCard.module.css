@@ -1,0 +1,219 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--gradient-card);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    160deg,
+    rgba(212, 175, 55, 0.2),
+    transparent 40%,
+    transparent 70%,
+    rgba(212, 175, 55, 0.06)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card:hover {
+  border-color: var(--color-glass-border-hover);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.imageWrap {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.card:hover .image {
+  transform: scale(1.08);
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 30%, rgba(0, 0, 0, 0.75) 100%);
+  transition: opacity var(--transition-base);
+}
+
+.iconBadge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-md);
+  color: var(--color-secondary);
+  backdrop-filter: var(--glass-blur);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-gold);
+}
+
+.card:hover .iconBadge {
+  background: var(--gradient-gold);
+  color: var(--color-primary);
+  transform: scale(1.05);
+}
+
+.body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.75rem;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 0.75rem;
+  transition: color var(--transition-fast);
+}
+
+.card:hover .title {
+  color: var(--color-secondary);
+}
+
+.description {
+  color: var(--color-text-muted);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-relaxed);
+  margin-bottom: 1.25rem;
+}
+
+.benefits {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.benefits li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  font-size: var(--text-body-sm);
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+}
+
+.check {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  background: rgba(212, 175, 55, 0.12);
+  border-radius: var(--radius-full);
+  color: var(--color-secondary);
+  font-size: 0.625rem;
+  font-weight: 700;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-glass-border);
+  flex-wrap: wrap;
+}
+
+.duration {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--color-text-subtle);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.duration svg {
+  color: var(--color-secondary);
+  flex-shrink: 0;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--color-secondary);
+  padding: 0.5rem 0;
+  transition: all var(--transition-base);
+}
+
+.cta svg {
+  transition: transform var(--transition-base);
+}
+
+.cta:hover {
+  color: var(--color-gold-light);
+}
+
+.cta:hover svg {
+  transform: translateX(4px);
+}
+
+.shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.04),
+    transparent
+  );
+  pointer-events: none;
+  z-index: 3;
+  transition: left 0.7s ease;
+}
+
+.card:hover .shine {
+  left: 120%;
+}

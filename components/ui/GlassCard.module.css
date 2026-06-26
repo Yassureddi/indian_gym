@@ -1,0 +1,49 @@
+.card {
+  background: var(--gradient-card);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-md);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    160deg,
+    rgba(212, 175, 55, 0.15),
+    transparent 45%,
+    rgba(255, 255, 255, 0.03)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.hover:hover {
+  background: var(--color-glass-hover);
+  border-color: var(--color-glass-border-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.sm {
+  padding: 1.25rem;
+}
+
+.md {
+  padding: 1.75rem;
+}
+
+.lg {
+  padding: 2.25rem;
+}

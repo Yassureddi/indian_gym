@@ -1,0 +1,108 @@
+/* ─── Glass Surfaces ─── */
+
+.glass {
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-card);
+}
+
+.glass-strong {
+  background: var(--color-glass-bg-strong);
+  border: 1px solid var(--color-glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-md);
+}
+
+.glass-card {
+  background: var(--gradient-card);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-md);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition-base);
+}
+
+.glass-card:hover {
+  border-color: var(--color-glass-border-hover);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-3px);
+}
+
+/* ─── Premium Cards ─── */
+
+.card-premium {
+  background: var(--gradient-card);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  position: relative;
+}
+
+.card-premium::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    145deg,
+    rgba(212, 175, 55, 0.2),
+    transparent 40%,
+    transparent 60%,
+    rgba(212, 175, 55, 0.08)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ─── Section Backgrounds ─── */
+
+.section-elevated {
+  background: var(--gradient-section);
+  position: relative;
+}
+
+.section-elevated::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-gold-radial);
+  pointer-events: none;
+}
+
+/* ─── Dividers ─── */
+
+.brand-divider {
+  width: 64px;
+  height: 2px;
+  background: var(--gradient-gold);
+  border-radius: var(--radius-full);
+}
+
+.brand-divider-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ─── Glow Effects ─── */
+
+.glow-gold {
+  position: relative;
+}
+
+.glow-gold::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(circle, var(--color-gold-glow), transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}

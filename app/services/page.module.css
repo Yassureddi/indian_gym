@@ -1,0 +1,72 @@
+.section {
+  position: relative;
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-gold-radial);
+  pointer-events: none;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  margin-bottom: 4rem;
+  position: relative;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3rem;
+  }
+}
+
+.bottomCta {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: var(--gradient-card);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-xl);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.bottomCta p {
+  color: var(--color-text-muted);
+  font-size: var(--text-body-lg);
+  margin-bottom: 1.5rem;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+  .buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .buttons a {
+    width: 100%;
+    text-align: center;
+  }
+}

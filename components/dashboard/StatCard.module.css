@@ -1,0 +1,24 @@
+.card {
+  border-radius: var(--radius-md) !important;
+}
+
+.label {
+  font-size: var(--text-label);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  margin-bottom: 0.5rem;
+}
+
+.value {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  color: var(--color-gold);
+  line-height: 1;
+}
+
+.hint {
+  margin-top: 0.5rem;
+  font-size: var(--text-body-sm);
+  color: var(--color-text-subtle);
+}

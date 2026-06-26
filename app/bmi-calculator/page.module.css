@@ -1,0 +1,11 @@
+.section {
+  position: relative;
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-gold-radial);
+  pointer-events: none;
+}

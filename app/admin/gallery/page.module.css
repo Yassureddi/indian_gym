@@ -1,0 +1,30 @@
+.card {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.imageWrap {
+  position: relative;
+  aspect-ratio: 4/3;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.meta {
+  padding: 0.875rem 1rem;
+}
+
+.alt {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.cat {
+  font-size: 0.6875rem;
+  color: var(--color-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}

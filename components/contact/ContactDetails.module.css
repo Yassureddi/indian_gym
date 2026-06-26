@@ -1,0 +1,121 @@
+.wrapper {
+  height: 100%;
+}
+
+.card {
+  border-radius: var(--radius-xl) !important;
+  height: 100%;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--text-h4);
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin-bottom: 1.75rem;
+}
+
+.block {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-glass-border);
+}
+
+.block:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  margin-bottom: 0.625rem;
+}
+
+.label svg {
+  flex-shrink: 0;
+}
+
+.address {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-style: normal;
+  color: var(--color-text-muted);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-relaxed);
+}
+
+.link {
+  color: var(--color-text);
+  font-size: var(--text-body);
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.link:hover {
+  color: var(--color-secondary);
+}
+
+.hours {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.hoursGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.hoursGroup strong {
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.125rem;
+}
+
+.hoursGroup span {
+  font-size: var(--text-body-sm);
+  color: var(--color-text-muted);
+  padding-left: 0.5rem;
+}
+
+.hoursGroup span::before {
+  content: "• ";
+  color: var(--color-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-glass-border);
+}
+
+.whatsappBtn {
+  display: block;
+  text-align: center;
+  padding: 0.875rem;
+  background: #25d366;
+  color: #fff;
+  font-weight: 600;
+  font-size: var(--text-body);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-base);
+}
+
+.whatsappBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35);
+}

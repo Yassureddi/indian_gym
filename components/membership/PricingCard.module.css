@@ -1,0 +1,202 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  background: var(--gradient-card);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-xl);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    165deg,
+    rgba(212, 175, 55, 0.18),
+    transparent 45%,
+    transparent 65%,
+    rgba(212, 175, 55, 0.08)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.popular {
+  border-color: var(--color-secondary) !important;
+  box-shadow: var(--shadow-gold-lg), var(--shadow-card);
+  transform: scale(1.04);
+  z-index: 1;
+}
+
+@media (max-width: 1024px) {
+  .popular {
+    transform: none;
+  }
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0.45rem 1.25rem;
+  background: var(--gradient-gold);
+  color: var(--color-primary);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  box-shadow: var(--shadow-gold);
+}
+
+.header {
+  margin-bottom: 1.5rem;
+  padding-top: 0.5rem;
+}
+
+.name {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.savings {
+  display: inline-block;
+  padding: 0.3rem 0.875rem;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--color-secondary);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.pricing {
+  margin-bottom: 1.5rem;
+}
+
+.priceRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.125rem;
+  line-height: 1;
+  margin-bottom: 0.375rem;
+}
+
+.currency {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin-top: 0.5rem;
+}
+
+.amount {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 5vw, 3.5rem);
+  color: var(--color-secondary);
+  letter-spacing: var(--tracking-wide);
+}
+
+.period {
+  display: block;
+  font-size: var(--text-body-sm);
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.original {
+  display: block;
+  font-size: var(--text-body-sm);
+  color: var(--color-text-subtle);
+  text-decoration: line-through;
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-glass-border), transparent);
+  margin-bottom: 1.5rem;
+}
+
+.features {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 2rem;
+  flex: 1;
+}
+
+.features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.625rem 0;
+  font-size: var(--text-body-sm);
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.features li:last-child {
+  border-bottom: none;
+}
+
+.check {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  background: rgba(212, 175, 55, 0.12);
+  border-radius: var(--radius-full);
+  color: var(--color-secondary);
+}
+
+.cta {
+  width: 100%;
+}
+
+.shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  pointer-events: none;
+  transition: left 0.8s ease;
+}
+
+.card:hover .shine {
+  left: 120%;
+}
+
+.card:hover {
+  border-color: var(--color-glass-border-hover);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.popular:hover {
+  box-shadow: var(--shadow-gold-lg), var(--shadow-card-hover);
+}

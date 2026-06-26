@@ -1,0 +1,138 @@
+.section {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  height: 500px;
+  background: radial-gradient(ellipse, rgba(212, 175, 55, 0.08), transparent 70%);
+  pointer-events: none;
+}
+
+.timeline {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.line {
+  position: absolute;
+  left: calc(50% - 1px);
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, var(--color-secondary), transparent);
+  transform-origin: top center;
+  transform: scaleY(0);
+}
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 3rem;
+  width: 50%;
+}
+
+.item:last-child {
+  margin-bottom: 0;
+}
+
+.left {
+  margin-right: auto;
+  padding-right: 3rem;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.right {
+  margin-left: auto;
+  padding-left: 3rem;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.dot {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: var(--gradient-gold);
+  color: var(--color-primary);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: var(--tracking-wide);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-gold-lg);
+  flex-shrink: 0;
+}
+
+.card {
+  padding: 1.5rem 1.75rem;
+  background: var(--gradient-card);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-card);
+  max-width: 340px;
+  transition: all var(--transition-base);
+}
+
+.card:hover {
+  border-color: var(--color-glass-border-hover);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.desc {
+  color: var(--color-text-muted);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-relaxed);
+}
+
+@media (max-width: 768px) {
+  .line {
+    left: 23px;
+    transform-origin: top center;
+  }
+
+  .item,
+  .left,
+  .right {
+    width: 100%;
+    margin: 0 0 2.5rem 0;
+    padding: 0 0 0 4.5rem;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .dot {
+    left: 24px;
+    width: 48px;
+    height: 48px;
+    font-size: 0.75rem;
+  }
+
+  .card {
+    max-width: 100%;
+  }
+}

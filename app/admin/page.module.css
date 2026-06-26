@@ -1,0 +1,29 @@
+.page {
+  max-width: 1400px;
+}
+
+.loading {
+  color: var(--color-text-muted);
+  padding: 2rem;
+}
+
+.charts {
+  display: grid;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.bottom {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .charts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bottom {
+    grid-template-columns: 1fr 1fr;
+  }
+}

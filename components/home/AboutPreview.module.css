@@ -1,0 +1,132 @@
+.section {
+  position: relative;
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-gold-radial);
+  pointer-events: none;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  position: relative;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.visual {
+  position: relative;
+}
+
+.imageStack {
+  position: relative;
+}
+
+.mainImage {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+}
+
+.imageStack::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: var(--radius-lg);
+  pointer-events: none;
+}
+
+.floatingCard {
+  position: absolute;
+  bottom: -24px;
+  right: -24px;
+  padding: 1.5rem 2rem;
+  background: var(--gradient-card);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-md);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-gold-lg);
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .floatingCard {
+    right: 0;
+    bottom: -16px;
+  }
+}
+
+.cardValue {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  color: var(--color-secondary);
+  line-height: 1;
+  letter-spacing: var(--tracking-wide);
+}
+
+.cardLabel {
+  font-size: var(--text-body-sm);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.content :global(.heading) {
+  margin-bottom: 1.25rem;
+}
+
+.text {
+  color: var(--color-text-muted);
+  font-size: var(--text-body-lg);
+  line-height: var(--leading-relaxed);
+  margin-bottom: 1.5rem;
+}
+
+.features {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.875rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 480px) {
+  .features {
+    grid-template-columns: 1fr;
+  }
+}
+
+.features li {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: var(--text-body-sm);
+  color: var(--color-text-muted);
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: rgba(212, 175, 55, 0.15);
+  border-radius: var(--radius-full);
+  color: var(--color-secondary);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}

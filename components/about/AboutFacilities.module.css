@@ -1,0 +1,120 @@
+.section {
+  background: var(--color-bg-secondary);
+  background-image: var(--gradient-gold-radial);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 540px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+  padding: 0 !important;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.imageWrap {
+  position: relative;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.card:hover .image {
+  transform: scale(1.06);
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-sm);
+  backdrop-filter: var(--glass-blur);
+}
+
+.body {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin-bottom: 0.625rem;
+}
+
+.desc {
+  color: var(--color-text-muted);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-relaxed);
+  flex: 1;
+}
+
+.highlight {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.highlightInner {
+  padding: 2.5rem;
+  text-align: center;
+  background: var(--gradient-card);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-xl);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-gold);
+}
+
+.highlightInner h3 {
+  font-family: var(--font-heading);
+  font-size: var(--text-h4);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+.highlightInner p {
+  color: var(--color-text-muted);
+  font-size: var(--text-body);
+  line-height: var(--leading-relaxed);
+}

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F0D78C"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#B8962E"/>
+    </linearGradient>
+    <linearGradient id="ringGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0.6"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="56" fill="#000000" stroke="url(#goldGrad)" stroke-width="2"/>
+  <circle cx="60" cy="60" r="48" fill="none" stroke="url(#ringGrad)" stroke-width="1"/>
+  <path d="M38 78V42h8l12 22 12-22h8v36h-7V58l-11 20h-6L42 58v20h-4z" fill="url(#goldGrad)"/>
+  <path d="M30 88h60" stroke="url(#goldGrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+  <text x="60" y="102" text-anchor="middle" fill="#D4AF37" font-family="Georgia, serif" font-size="7" font-weight="700" letter-spacing="1.5">FITNESS</text>
+</svg>

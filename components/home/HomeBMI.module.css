@@ -1,0 +1,4 @@
+.section {
+  background: var(--color-bg-secondary);
+  background-image: var(--gradient-gold-radial);
+}

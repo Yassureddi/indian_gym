@@ -1,0 +1,102 @@
+.formCard {
+  border-radius: var(--radius-xl) !important;
+}
+
+.formTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-h4);
+  font-weight: 700;
+  margin-bottom: 0.375rem;
+}
+
+.formSubtitle {
+  color: var(--color-text-muted);
+  font-size: var(--text-body-sm);
+  margin-bottom: 1.75rem;
+  line-height: var(--leading-relaxed);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  font-size: var(--text-body-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  padding: 0.9375rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: var(--text-body);
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+}
+
+.field select {
+  cursor: pointer;
+}
+
+.field select option {
+  background: var(--color-bg-secondary);
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.whatsappBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 1rem 1.75rem;
+  margin-top: 0.5rem;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: #fff;
+  background: #25d366;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.25);
+}
+
+.whatsappBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(37, 211, 102, 0.4);
+}
+
+.note {
+  text-align: center;
+  font-size: var(--text-caption);
+  color: var(--color-text-subtle);
+  margin-top: 0.25rem;
+}

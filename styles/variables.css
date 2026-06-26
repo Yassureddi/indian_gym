@@ -1,0 +1,127 @@
+:root {
+  /* ─── Brand Colors ─── */
+  --color-primary: #000000;
+  --color-secondary: #d4af37;
+  --color-text: #ffffff;
+
+  /* Semantic aliases */
+  --color-bg: #000000;
+  --color-bg-secondary: #0a0a0a;
+  --color-bg-tertiary: #141414;
+  --color-bg-elevated: #1a1a1a;
+  --color-text-muted: #a3a3a3;
+  --color-text-subtle: #737373;
+  --color-gold: #d4af37;
+  --color-gold-light: #f0d78c;
+  --color-gold-dark: #b8962e;
+  --color-gold-glow: rgba(212, 175, 55, 0.25);
+
+  /* ─── Glass Effect ─── */
+  --color-glass-bg: rgba(255, 255, 255, 0.04);
+  --color-glass-bg-strong: rgba(255, 255, 255, 0.07);
+  --color-glass-border: rgba(212, 175, 55, 0.12);
+  --color-glass-border-hover: rgba(212, 175, 55, 0.35);
+  --color-glass-hover: rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(24px);
+
+  /* ─── Background Gradients ─── */
+  --gradient-page: linear-gradient(
+    180deg,
+    #000000 0%,
+    #050505 35%,
+    #0a0a0a 70%,
+    #000000 100%
+  );
+  --gradient-section: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0) 0%,
+    rgba(20, 20, 20, 0.6) 50%,
+    rgba(10, 10, 10, 0) 100%
+  );
+  --gradient-gold-radial: radial-gradient(
+    ellipse 80% 50% at 50% -20%,
+    rgba(212, 175, 55, 0.12) 0%,
+    transparent 60%
+  );
+  --gradient-card: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 50%,
+    rgba(212, 175, 55, 0.04) 100%
+  );
+  --gradient-gold: linear-gradient(135deg, #f0d78c 0%, #d4af37 50%, #b8962e 100%);
+  --gradient-gold-text: linear-gradient(135deg, #f0d78c, #d4af37, #b8962e);
+
+  /* ─── Typography ─── */
+  --font-display: "Bebas Neue", "Impact", sans-serif;
+  --font-heading: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-body: "DM Sans", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --text-display: clamp(3rem, 7vw, 5.5rem);
+  --text-h1: clamp(2.25rem, 5vw, 3.75rem);
+  --text-h2: clamp(1.875rem, 4vw, 3rem);
+  --text-h3: clamp(1.5rem, 3vw, 2rem);
+  --text-h4: clamp(1.25rem, 2.5vw, 1.5rem);
+  --text-h5: 1.125rem;
+  --text-h6: 1rem;
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-body-sm: 0.875rem;
+  --text-label: 0.75rem;
+  --text-caption: 0.6875rem;
+
+  --leading-tight: 1.1;
+  --leading-snug: 1.25;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.75;
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.08em;
+  --tracking-wider: 0.15em;
+  --tracking-widest: 0.2em;
+
+  /* ─── Spacing ─── */
+  --container-max: 1280px;
+  --container-padding: 1.5rem;
+  --section-padding: 6rem;
+  --header-height: 84px;
+
+  /* ─── Premium Shadows ─── */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.7);
+  --shadow-gold: 0 4px 32px rgba(212, 175, 55, 0.18);
+  --shadow-gold-lg: 0 8px 48px rgba(212, 175, 55, 0.25);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-card-hover: 0 20px 56px rgba(0, 0, 0, 0.55), 0 0 40px rgba(212, 175, 55, 0.12);
+
+  /* ─── Border Radius ─── */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  /* Legacy aliases */
+  --border-radius-sm: var(--radius-sm);
+  --border-radius-md: var(--radius-md);
+  --border-radius-lg: var(--radius-lg);
+  --border-radius-xl: var(--radius-xl);
+
+  /* ─── Transitions ─── */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ─── Status ─── */
+  --color-success: #4ade80;
+  --color-error: #f87171;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-padding: 4rem;
+    --container-padding: 1rem;
+    --header-height: 72px;
+  }
+}

@@ -1,0 +1,27 @@
+.card {
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+}
+
+.header {
+  margin-bottom: 1.25rem;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.body {
+  width: 100%;
+  min-height: 220px;
+}
