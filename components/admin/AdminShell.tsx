@@ -11,10 +11,13 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const router = useRouter();
   const [user, setUser] = useState<SessionUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    fetch("/api/auth/me")
+    let cancelled = false;
+
+    fetch("/api/auth/me", { credentials: "include" })
       .then(async (r) => {
         const data = await r.json();
         if (!r.ok) {
@@ -24,24 +27,41 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         return data;
       })
       .then((authData) => {
+        if (cancelled) return;
+
         if (authData.user.role !== "admin") {
           router.replace("/dashboard");
           return;
         }
+
         setUser(authData.user);
       })
       .catch((err) => {
+        if (cancelled) return;
+
         if (err instanceof Error && err.message === "unauthorized") {
           router.replace("/login?redirect=/admin");
+          return;
         }
+
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Could not load admin session. Check database connection."
+        );
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [router]);
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.replace("/login");
-    router.refresh();
+    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    window.location.href = "/login";
   };
 
   if (loading) {
@@ -53,7 +73,38 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     );
   }
 
-  if (!user) return null;
+  if (error) {
+    return (
+      <div className={styles.loading}>
+        <p className={styles.error}>{error}</p>
+        <button
+          type="button"
+          className={styles.retryBtn}
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
+        <button
+          type="button"
+          className={styles.retryBtn}
+          onClick={() => {
+            window.location.href = "/login?redirect=/admin";
+          }}
+        >
+          Back to login
+        </button>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className={styles.loading}>
+        <div className={styles.spinner} />
+        <p>Redirecting...</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.shell}>

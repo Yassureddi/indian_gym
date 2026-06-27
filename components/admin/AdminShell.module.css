@@ -123,6 +123,27 @@
   to { transform: rotate(360deg); }
 }
 
+.error {
+  color: #f87171;
+  text-align: center;
+  max-width: 28rem;
+  line-height: 1.5;
+}
+
+.retryBtn {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: rgba(212, 175, 55, 0.08);
+  color: var(--color-gold);
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.retryBtn:hover {
+  background: rgba(212, 175, 55, 0.15);
+}
+
 @media (min-width: 1024px) {
   .main {
     margin-left: 272px;

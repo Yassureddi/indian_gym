@@ -10,7 +10,8 @@ export async function GET() {
       return jsonError("Unauthorized", 401);
     }
     return NextResponse.json({ user: mapUser(session) });
-  } catch {
+  } catch (error) {
+    console.error("[auth/me]", error);
     return jsonError("Failed to fetch session", 500);
   }
 }

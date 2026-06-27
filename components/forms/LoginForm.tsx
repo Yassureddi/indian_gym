@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import Logo from "@/components/brand/Logo";
@@ -11,7 +11,6 @@ import PasswordInput from "@/components/ui/PasswordInput";
 import styles from "./LoginForm.module.css";
 
 export default function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -39,8 +38,9 @@ export default function LoginForm() {
       const redirect =
         searchParams.get("redirect") ||
         (data.user.role === "admin" ? "/admin" : "/dashboard");
-      router.push(redirect);
-      router.refresh();
+
+      // Full navigation ensures auth cookie is applied before admin shell loads.
+      window.location.assign(redirect);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -106,8 +106,8 @@ export default function LoginForm() {
 
         <div className={styles.demo}>
           <p className={styles.demoTitle}>Demo Accounts</p>
-          <p>Admin: admin@gym.com / Admin@123</p>
-          <p>Member: member@gym.com / Member@123</p>
+          <p>Admin: admin@gym.com / admin123</p>
+          <p>Member: member@gym.com / member123</p>
         </div>
 
         <p className={styles.signup}>

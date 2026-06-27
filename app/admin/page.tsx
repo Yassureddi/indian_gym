@@ -75,12 +75,25 @@ function formatDateTime(date: string) {
 
 export default function AdminDashboardPage() {
   const [data, setData] = useState<OverviewData | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/admin/overview")
-      .then((r) => r.json())
-      .then(setData);
+    fetch("/api/admin/overview", { credentials: "include" })
+      .then(async (r) => {
+        const json = await r.json();
+        if (!r.ok || !json.stats) {
+          throw new Error(json.error || "Failed to load dashboard");
+        }
+        setData(json);
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Failed to load dashboard");
+      });
   }, []);
+
+  if (error) {
+    return <p className={styles.loading}>{error}</p>;
+  }
 
   if (!data) {
     return <p className={styles.loading}>Loading dashboard...</p>;

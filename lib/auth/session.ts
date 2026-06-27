@@ -1,6 +1,7 @@
 import { getAuthToken } from "./cookies";
 import { verifyToken } from "./jwt";
 import { getUserById, toSessionUser } from "@/lib/db/users";
+import { initializeDatabase } from "@/lib/db/init";
 import type { SessionUser } from "./types";
 
 function sessionFromJwt(payload: NonNullable<Awaited<ReturnType<typeof verifyToken>>>): SessionUser {
@@ -20,9 +21,14 @@ export async function getSession(): Promise<SessionUser | null> {
   const payload = await verifyToken(token);
   if (!payload?.sub) return null;
 
-  const user = await getUserById(payload.sub);
-  if (user) {
-    return toSessionUser(user);
+  try {
+    await initializeDatabase();
+    const user = await getUserById(payload.sub);
+    if (user) {
+      return toSessionUser(user);
+    }
+  } catch (error) {
+    console.error("[session] Database lookup failed, using JWT fallback:", error);
   }
 
   return sessionFromJwt(payload);
