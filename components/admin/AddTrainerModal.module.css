@@ -1,0 +1,37 @@
+.modal {
+  max-width: 640px;
+}
+
+.previewWrap {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: fit-content;
+}
+
+.preview {
+  width: 240px;
+  height: auto;
+  max-height: 280px;
+  object-fit: cover;
+  display: block;
+}
+
+.formActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.secondaryLink {
+  font-size: 0.8125rem;
+  color: var(--color-gold);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.secondaryLink:hover {
+  opacity: 0.85;
+  text-decoration: underline;
+}

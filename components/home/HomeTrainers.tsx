@@ -9,8 +9,8 @@ import Button from "@/components/ui/Button";
 import type { Trainer } from "@/lib/trainers";
 import styles from "./HomeTrainers.module.css";
 
-function isRemoteSrc(src: string) {
-  return src.startsWith("http");
+function isOptimizableSrc(src: string) {
+  return src.startsWith("http") && !src.startsWith("data:");
 }
 
 export default function HomeTrainers() {
@@ -52,14 +52,14 @@ export default function HomeTrainers() {
                       fill
                       sizes="(max-width: 768px) 50vw, 25vw"
                       className={styles.image}
-                      unoptimized={!isRemoteSrc(trainer.image)}
+                      unoptimized={!isOptimizableSrc(trainer.image)}
                     />
                     <div className={styles.overlay} />
                     <div className={styles.badge}>{trainer.experience}</div>
                   </div>
                   <div className={styles.info}>
                     <h3>{trainer.name}</h3>
-                    <p className={styles.role}>{trainer.role}</p>
+                    <p className={styles.role}>{trainer.purpose || trainer.role}</p>
                     <span className={styles.specialty}>{trainer.specialty}</span>
                   </div>
                 </Link>

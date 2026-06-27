@@ -2,21 +2,35 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import AddTrainerModal from "@/components/admin/AddTrainerModal";
+import Button from "@/components/ui/Button";
 import type { Trainer } from "@/lib/trainers";
 import shared from "@/components/admin/admin-shared.module.css";
 import styles from "./page.module.css";
 
-function isRemoteSrc(src: string) {
-  return src.startsWith("http");
+function isOptimizableSrc(src: string) {
+  return src.startsWith("http") && !src.startsWith("data:");
+}
+
+function formatDob(dob?: string) {
+  if (!dob) return "—";
+  return new Date(dob).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 export default function AdminTrainersPage() {
   const [trainers, setTrainers] = useState<Trainer[]>([]);
   const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [addOpen, setAddOpen] = useState(false);
 
-  useEffect(() => {
+  const load = () =>
     fetch("/api/admin/trainers")
       .then((r) => r.json())
       .then((d) => {
@@ -25,19 +39,49 @@ export default function AdminTrainersPage() {
       })
       .catch((err) => setError(err instanceof Error ? err.message : "Failed to load trainers"))
       .finally(() => setLoading(false));
+
+  useEffect(() => {
+    load();
   }, []);
+
+  const handleSuccess = (msg: string) => {
+    setMessage(msg);
+    setError("");
+    setLoading(true);
+    load();
+  };
 
   return (
     <div>
       <AdminPageHeader
         title="Trainers"
         description={`Manage trainer profiles displayed on the website. ${trainers.length} trainer${trainers.length === 1 ? "" : "s"} in the database.`}
+        action={
+          <div className={styles.headerActions}>
+            <Link href="/trainers" target="_blank" rel="noopener noreferrer" className={styles.viewLink}>
+              See All Trainers →
+            </Link>
+            <Button type="button" variant="primary" onClick={() => setAddOpen(true)}>
+              Add Trainer
+            </Button>
+          </div>
+        }
       />
+
+      {message && <p className={`${shared.alert} ${shared.alertSuccess}`}>{message}</p>}
       {error && <p className={`${shared.alert} ${shared.alertError}`}>{error}</p>}
+
+      <div className={styles.listHeader}>
+        <h3 className={styles.panelTitle}>All Trainers</h3>
+        <Link href="/trainers" target="_blank" rel="noopener noreferrer" className={styles.viewLink}>
+          View on website →
+        </Link>
+      </div>
+
       {loading ? (
         <p className={styles.empty}>Loading trainers...</p>
       ) : trainers.length === 0 ? (
-        <p className={styles.empty}>No trainers in the database. Run the API seed or add trainers via the API.</p>
+        <p className={styles.empty}>No trainers yet. Click Add Trainer to create one.</p>
       ) : (
         <div className={shared.cardGrid}>
           {trainers.map((trainer) => (
@@ -49,12 +93,21 @@ export default function AdminTrainersPage() {
                   fill
                   sizes="300px"
                   className={styles.image}
-                  unoptimized={!isRemoteSrc(trainer.image)}
+                  unoptimized={!isOptimizableSrc(trainer.image)}
                 />
+                <span className={styles.liveBadge}>Live</span>
               </div>
               <div className={styles.body}>
                 <h3>{trainer.name}</h3>
-                <p className={styles.role}>{trainer.role}</p>
+                <p className={styles.role}>{trainer.purpose || trainer.role}</p>
+                <div className={styles.metaGrid}>
+                  <span>
+                    <strong>Age:</strong> {trainer.age ?? "—"}
+                  </span>
+                  <span>
+                    <strong>DOB:</strong> {formatDob(trainer.dob)}
+                  </span>
+                </div>
                 <p className={styles.spec}>
                   {trainer.specialty} · {trainer.experience}
                 </p>
@@ -69,6 +122,12 @@ export default function AdminTrainersPage() {
           ))}
         </div>
       )}
+
+      <AddTrainerModal
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        onSuccess={handleSuccess}
+      />
     </div>
   );
 }

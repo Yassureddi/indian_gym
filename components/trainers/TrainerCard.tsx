@@ -12,7 +12,7 @@ interface TrainerCardProps {
 }
 
 export default function TrainerCard({ trainer, index }: TrainerCardProps) {
-  const isRemote = trainer.image.startsWith("http");
+  const useOptimizer = trainer.image.startsWith("http") && !trainer.image.startsWith("data:");
 
   return (
     <motion.article
@@ -31,7 +31,7 @@ export default function TrainerCard({ trainer, index }: TrainerCardProps) {
           fill
           sizes="(max-width: 768px) 100vw, 33vw"
           className={styles.photo}
-          unoptimized={!isRemote}
+          unoptimized={!useOptimizer}
         />
         <div className={styles.photoOverlay} />
         <span className={styles.experienceBadge}>{trainer.experience}</span>
@@ -40,8 +40,21 @@ export default function TrainerCard({ trainer, index }: TrainerCardProps) {
       <div className={styles.body}>
         <div className={styles.header}>
           <h3 className={styles.name}>{trainer.name}</h3>
-          <p className={styles.role}>{trainer.role}</p>
+          <p className={styles.role}>{trainer.purpose || trainer.role}</p>
         </div>
+
+        {(trainer.age != null || trainer.dob) && (
+          <p className={styles.profileMeta}>
+            {trainer.age != null && `${trainer.age} years old`}
+            {trainer.age != null && trainer.dob && " · "}
+            {trainer.dob &&
+              `DOB: ${new Date(trainer.dob).toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}`}
+          </p>
+        )}
 
         <div className={styles.specialty}>
           <SpecialtyIcon />

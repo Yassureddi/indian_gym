@@ -24,6 +24,40 @@ export async function saveTrainer(trainer: Trainer) {
   await writeJson(FILE, items);
 }
 
+export async function createTrainer(data: {
+  name: string;
+  age: number;
+  purpose: string;
+  dob: string;
+  image: string;
+  isActive?: boolean;
+}): Promise<Trainer> {
+  const items = await getTrainers();
+  const maxOrder = items.reduce((max, t) => Math.max(max, t.sortOrder ?? 0), 0);
+  const name = data.name.trim();
+  const purpose = data.purpose.trim();
+
+  const trainer: Trainer = {
+    id: createId("trainer"),
+    name,
+    age: data.age,
+    dob: data.dob,
+    purpose,
+    role: purpose,
+    specialty: purpose,
+    experience: "Certified Coach",
+    image: data.image,
+    bio: `${name} is a dedicated fitness trainer specializing in ${purpose}.`,
+    certificates: ["Certified Fitness Trainer"],
+    social: {},
+    isActive: data.isActive !== false,
+    sortOrder: maxOrder + 1,
+  };
+
+  await saveTrainer(trainer);
+  return trainer;
+}
+
 const TRAINER_SEED: Omit<Trainer, "id">[] = [
   {
     name: "K N Raju",

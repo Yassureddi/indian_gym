@@ -1,0 +1,115 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  padding: 1rem;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 920px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(145deg, #0a0a0a 0%, #111 50%, #0d0d0d 100%);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 18px;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.65),
+    0 0 48px rgba(212, 175, 55, 0.08);
+  overflow: hidden;
+}
+
+.accentBar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(
+    180deg,
+    #f0d78c 0%,
+    #d4af37 45%,
+    #b8962e 100%
+  );
+  pointer-events: none;
+}
+
+.modalBody {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1.5rem 1.75rem 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.subtitle {
+  margin-top: 0.35rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.closeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-muted);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.closeBtn:hover {
+  border-color: rgba(212, 175, 55, 0.45);
+  color: var(--color-gold);
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.error {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  color: #f87171;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 640px) {
+  .modalBody {
+    padding: 1.25rem 1.25rem 1.125rem;
+  }
+}

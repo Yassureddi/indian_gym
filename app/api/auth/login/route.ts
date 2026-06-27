@@ -14,7 +14,8 @@ export async function POST(request: NextRequest) {
 
     await setAuthCookie(result.token, Boolean(body.rememberMe));
     return NextResponse.json({ user: result.user });
-  } catch {
+  } catch (error) {
+    console.error("[auth/login]", error);
     return jsonError("Login failed", 500);
   }
 }

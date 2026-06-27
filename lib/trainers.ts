@@ -14,6 +14,9 @@ export interface Trainer {
   bio: string;
   certificates: string[];
   social: TrainerSocial;
+  age?: number;
+  dob?: string;
+  purpose?: string;
   isActive?: boolean;
   sortOrder?: number;
 }

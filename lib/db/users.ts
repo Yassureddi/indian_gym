@@ -110,13 +110,19 @@ export async function createUser(data: {
   return user;
 }
 
+/** Pre-computed bcrypt hashes so demo login works on serverless cold starts. */
+const DEMO_ADMIN_HASH =
+  "$2b$12$dZHC8NHZoQ631AhiARumt.gTb.58aSzN2yoKg97SWlAZUOKwZJWTq";
+const DEMO_MEMBER_HASH =
+  "$2b$12$sMh/osFM1GJRUjr4Vip5Te7g/8pJelHWHvffQWVFK.BtxImUPB/vu";
+
 export async function ensureSeedUsers() {
   const users = await getUsers();
   if (users.length > 0) return;
 
   const now = new Date().toISOString();
-  const adminHash = await hashPassword("Admin@123");
-  const memberHash = await hashPassword("Member@123");
+  const adminHash = DEMO_ADMIN_HASH;
+  const memberHash = DEMO_MEMBER_HASH;
 
   const seedUsers: User[] = [
     {
