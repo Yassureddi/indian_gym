@@ -122,6 +122,8 @@ export async function GET() {
       membershipPlans: MEMBERSHIP_PLANS,
     });
   } catch (error) {
-    return handleAuthError(error);
+    const response = handleAuthError(error);
+    console.error("[admin/overview]", error);
+    return response;
   }
 }

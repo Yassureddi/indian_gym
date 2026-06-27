@@ -133,6 +133,15 @@ async function resolveMongoUri(uri: string): Promise<string> {
     return uri;
   }
 
+  // Vercel/Linux: native driver SRV resolution works — custom DNS is Windows-only.
+  const useNativeSrv =
+    process.platform !== "win32" && process.env.FORCE_MONGO_SRV_RESOLVE !== "1";
+  if (useNativeSrv) {
+    logDebug("Using mongodb+srv URI directly (serverless/Linux)");
+    resolvedUriCache = uri;
+    return uri;
+  }
+
   configureMongoDns();
 
   const srvName = `_mongodb._tcp.${parsed.hostname}`;
@@ -210,9 +219,15 @@ export function logMongoConnectionError(error: unknown): void {
  * Safe to call from every API route — connection is cached globally.
  */
 export async function connectDB(): Promise<typeof mongoose> {
-  if (cached.conn) {
+  if (cached.conn && mongoose.connection.readyState === 1) {
     logDebug("Using cached connection.");
     return cached.conn;
+  }
+
+  if (cached.conn && mongoose.connection.readyState !== 1) {
+    logDebug("Stale connection detected, reconnecting...");
+    cached.conn = null;
+    cached.promise = null;
   }
 
   configureMongoDns();

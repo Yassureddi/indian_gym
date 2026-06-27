@@ -87,7 +87,10 @@ export async function ensureSeedPayments() {
     },
   ];
 
-  await PaymentModel.insertMany(seed);
+  await PaymentModel.insertMany(seed, { ordered: false }).catch((error: unknown) => {
+    const code = (error as { code?: number }).code;
+    if (code !== 11000) throw error;
+  });
 }
 
 export function getMonthlyRevenue(payments: Payment[]) {

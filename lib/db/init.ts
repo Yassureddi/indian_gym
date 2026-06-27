@@ -15,9 +15,9 @@ import { ensureSeedStoreSales } from "./store-sales";
 import { ensureSeedNotifications } from "./notifications";
 
 let initialized = false;
+let initPromise: Promise<void> | null = null;
 
-export async function initializeDatabase() {
-  if (initialized || isBuildPhase()) return;
+async function runSeed(): Promise<void> {
   await ensureDb();
   await ensureSeedUsers();
   await ensureSeedMemberships();
@@ -33,4 +33,22 @@ export async function initializeDatabase() {
   await ensureSeedStoreSales();
   await ensureSeedNotifications();
   initialized = true;
+}
+
+/**
+ * Seed demo data once per serverless instance.
+ * Uses a shared promise so parallel API calls (overview, notifications, etc.)
+ * do not race duplicate inserts on cold start.
+ */
+export async function initializeDatabase() {
+  if (initialized || isBuildPhase()) return;
+
+  if (!initPromise) {
+    initPromise = runSeed().catch((error) => {
+      initPromise = null;
+      throw error;
+    });
+  }
+
+  await initPromise;
 }

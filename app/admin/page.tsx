@@ -92,7 +92,18 @@ export default function AdminDashboardPage() {
   }, []);
 
   if (error) {
-    return <p className={styles.loading}>{error}</p>;
+    return (
+      <div className={styles.errorPanel}>
+        <p className={styles.loading}>{error}</p>
+        <button
+          type="button"
+          className={styles.retryBtn}
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
+      </div>
+    );
   }
 
   if (!data) {

@@ -7,6 +7,28 @@
   padding: 2rem;
 }
 
+.errorPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.retryBtn {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: rgba(212, 175, 55, 0.08);
+  color: var(--color-gold);
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.retryBtn:hover {
+  background: rgba(212, 175, 55, 0.15);
+}
+
 .storeSection {
   margin: 1.5rem 0;
 }

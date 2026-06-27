@@ -121,18 +121,16 @@ const DEMO_MEMBER_HASH =
 
 export async function ensureSeedUsers() {
   await ensureDb();
-  const demoAdmin = await UserModel.findOne({ id: "user_admin_demo" }).lean();
-  if (demoAdmin) return;
-
   const now = new Date().toISOString();
-  await UserModel.insertMany([
+
+  const seeds = [
     {
       id: "user_admin_demo",
       email: "admin@gym.com",
       phone: "9999999999",
       name: "Gym Admin",
       passwordHash: DEMO_ADMIN_HASH,
-      role: "admin",
+      role: "admin" as const,
       createdAt: now,
       updatedAt: now,
     },
@@ -142,7 +140,7 @@ export async function ensureSeedUsers() {
       phone: "8142113631",
       name: "Demo Member",
       passwordHash: DEMO_MEMBER_HASH,
-      role: "member",
+      role: "member" as const,
       goal: "Muscle Gain",
       gender: "Male",
       age: 28,
@@ -150,5 +148,9 @@ export async function ensureSeedUsers() {
       createdAt: now,
       updatedAt: now,
     },
-  ]);
+  ];
+
+  for (const user of seeds) {
+    await UserModel.findOneAndUpdate({ id: user.id }, user, { upsert: true });
+  }
 }
