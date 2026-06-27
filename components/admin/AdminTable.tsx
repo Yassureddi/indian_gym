@@ -11,8 +11,8 @@ export function AdminTable({ headers, children }: AdminTableProps) {
       <table className={styles.table}>
         <thead>
           <tr>
-            {headers.map((h) => (
-              <th key={h}>{h}</th>
+            {headers.map((h, i) => (
+              <th key={`${h}-${i}`}>{h}</th>
             ))}
           </tr>
         </thead>

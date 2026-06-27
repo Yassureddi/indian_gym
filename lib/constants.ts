@@ -45,15 +45,36 @@ export const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
-  { href: "/membership", label: "Membership Plans" },
+  { href: "/membership", label: "Membership Plans", shortLabel: "Membership" },
   { href: "/trainers", label: "Trainers" },
+  { href: "/supplements", label: "Supplements" },
   { href: "/gallery", label: "Gallery" },
-  { href: "/transformation", label: "Transformations" },
-  { href: "/bmi-calculator", label: "BMI Calculator" },
+  { href: "/transformation", label: "Transformations", shortLabel: "Transform" },
+  { href: "/bmi-calculator", label: "BMI Calculator", shortLabel: "BMI" },
   { href: "/blogs", label: "Blogs" },
   { href: "/faqs", label: "FAQs" },
   { href: "/contact", label: "Contact" },
-];
+] as const;
+
+export type NavLink = (typeof NAV_LINKS)[number];
+
+/** Shown directly in the desktop navbar */
+export const NAV_LINKS_PRIMARY: NavLink[] = NAV_LINKS.filter((link) =>
+  [
+    "/",
+    "/about",
+    "/services",
+    "/membership",
+    "/trainers",
+    "/supplements",
+    "/contact",
+  ].includes(link.href)
+);
+
+/** Grouped under the “More” menu on desktop */
+export const NAV_LINKS_MORE: NavLink[] = NAV_LINKS.filter(
+  (link) => !NAV_LINKS_PRIMARY.includes(link)
+);
 
 export const STATS = [
   { value: "15+", label: "Years Experience" },

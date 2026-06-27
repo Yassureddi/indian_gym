@@ -9,6 +9,8 @@ import { getMembers } from "@/lib/db/users";
 import { getBlogs } from "@/lib/db/blogs";
 import { getGalleryItems } from "@/lib/db/gallery";
 import { getTrainers } from "@/lib/db/trainers";
+import { getSupplements } from "@/lib/db/supplements";
+import { getStoreSales, getStoreSalesStats } from "@/lib/db/store-sales";
 import type { Payment } from "@/lib/admin/types";
 
 function getMembershipDistribution(payments: Payment[]) {
@@ -50,14 +52,27 @@ export async function GET() {
     await requireAdmin();
     await initializeDatabase();
 
-    const [members, payments, activity, gallery, blogs, trainers] = await Promise.all([
-      getMembers(),
-      getPayments(),
-      getActivity(),
-      getGalleryItems(),
-      getBlogs(),
-      getTrainers(),
-    ]);
+    const [members, payments, activity, gallery, blogs, trainers, supplements, storeSales] =
+      await Promise.all([
+        getMembers(),
+        getPayments(),
+        getActivity(),
+        getGalleryItems(),
+        getBlogs(),
+        getTrainers(),
+        getSupplements(),
+        getStoreSales(),
+      ]);
+
+    const storeStats = getStoreSalesStats(storeSales);
+    const lowStockProducts = supplements
+      .filter((s) => s.isActive && s.stockQuantity <= 5)
+      .map((s) => ({
+        id: s.id,
+        name: s.name,
+        stock: s.stockQuantity,
+      }))
+      .slice(0, 6);
 
     const now = new Date();
     const monthlyRevenue = payments
@@ -82,6 +97,22 @@ export async function GET() {
         galleryItems: gallery.length,
         blogPosts: blogs.length,
         trainers: trainers.length,
+        todayStoreSales: storeStats.todaySalesCount,
+        todayStoreRevenue: storeStats.todayRevenue,
+        monthlyStoreRevenue: storeStats.monthlyRevenue,
+      },
+      store: {
+        bestSelling: storeStats.bestSelling,
+        lowStockProducts,
+        recentSales: storeStats.recentSales.map((s) => ({
+          id: s.id,
+          invoiceNumber: s.invoiceNumber,
+          customerName: s.customerName,
+          grandTotal: s.grandTotal,
+          paymentMethod: s.paymentMethod,
+          createdAt: s.createdAt,
+          soldByName: s.soldByName,
+        })),
       },
       charts: {
         revenue: getMonthlyRevenue(payments),

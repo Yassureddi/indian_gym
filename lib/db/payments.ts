@@ -12,6 +12,13 @@ export async function getPaymentById(id: string): Promise<Payment | null> {
   return payments.find((p) => p.id === id) ?? null;
 }
 
+export async function getPaymentsByUserId(userId: string): Promise<Payment[]> {
+  const payments = await getPayments();
+  return payments
+    .filter((p) => p.userId === userId)
+    .sort((a, b) => (b.dueDate ?? b.date).localeCompare(a.dueDate ?? a.date));
+}
+
 export async function createPayment(data: Omit<Payment, "id">): Promise<Payment> {
   const payment: Payment = { ...data, id: createId("pay") };
   await savePayment(payment);

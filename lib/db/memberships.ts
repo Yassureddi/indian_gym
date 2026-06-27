@@ -17,12 +17,35 @@ export async function getMembershipById(
 export async function getMembershipByUserId(
   userId: string
 ): Promise<MemberMembership | null> {
-  const memberships = await getMemberships();
+  const memberships = await getMembershipsForUser(userId);
   return (
-    memberships.find((m) => m.userId === userId && m.status === "active") ??
-    memberships.find((m) => m.userId === userId) ??
+    memberships.find((m) => m.status === "active") ??
+    memberships[0] ??
     null
   );
+}
+
+export async function getMembershipsForUser(
+  userId: string
+): Promise<MemberMembership[]> {
+  const memberships = await getMemberships();
+  return memberships
+    .filter((m) => m.userId === userId)
+    .sort((a, b) => b.startDate.localeCompare(a.startDate));
+}
+
+export async function expireActiveMembershipsForUser(userId: string) {
+  const memberships = await getMemberships();
+  let changed = false;
+  for (const membership of memberships) {
+    if (membership.userId === userId && membership.status === "active") {
+      membership.status = "expired";
+      changed = true;
+    }
+  }
+  if (changed) {
+    await writeJson(FILE, memberships);
+  }
 }
 
 export async function saveMembership(membership: MemberMembership) {

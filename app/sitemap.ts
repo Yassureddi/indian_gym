@@ -12,6 +12,7 @@ const PUBLIC_ROUTES: {
   { path: "/services", priority: 0.85, changeFrequency: "monthly" },
   { path: "/membership", priority: 0.9, changeFrequency: "weekly" },
   { path: "/trainers", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/supplements", priority: 0.85, changeFrequency: "weekly" },
   { path: "/gallery", priority: 0.75, changeFrequency: "weekly" },
   { path: "/transformation", priority: 0.8, changeFrequency: "weekly" },
   { path: "/bmi-calculator", priority: 0.7, changeFrequency: "monthly" },

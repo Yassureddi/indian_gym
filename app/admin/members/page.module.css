@@ -1,0 +1,150 @@
+.muted {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.memberLink {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.memberLink:hover {
+  color: var(--color-gold);
+}
+
+.badgeActive,
+.badgeExpiring,
+.badgeExpired,
+.badgeNone {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badgeActive {
+  background: rgba(74, 222, 128, 0.12);
+  color: #4ade80;
+}
+
+.badgeExpiring {
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--color-gold);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+.badgeExpired {
+  background: rgba(248, 113, 113, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+
+.badgeNone {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text-muted);
+}
+
+.renewBtn {
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  background: rgba(212, 175, 55, 0.08);
+  color: var(--color-gold);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+
+.renewBtn:hover {
+  background: rgba(212, 175, 55, 0.18);
+  border-color: var(--color-gold);
+  transform: translateY(-1px);
+}
+
+.renewBtnExpiring {
+  background: rgba(212, 175, 55, 0.18);
+  border-color: rgba(212, 175, 55, 0.65);
+  color: var(--color-gold);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.25);
+  animation: pulseRenewGold 2s ease-in-out infinite;
+}
+
+.renewBtnExpiring:hover {
+  background: rgba(212, 175, 55, 0.28);
+  border-color: var(--color-gold);
+}
+
+.renewBtnUrgent {
+  background: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.55);
+  color: #f87171;
+  box-shadow: 0 0 16px rgba(248, 113, 113, 0.2);
+  animation: pulseRenew 2s ease-in-out infinite;
+}
+
+.renewBtnUrgent:hover {
+  background: rgba(248, 113, 113, 0.2);
+  border-color: #f87171;
+}
+
+.renewBtnDisabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+  animation: none;
+}
+
+.renewBtnDisabled:hover {
+  background: rgba(212, 175, 55, 0.08);
+  border-color: rgba(212, 175, 55, 0.45);
+  transform: none;
+}
+
+.expiredRow td {
+  background: rgba(248, 113, 113, 0.03);
+}
+
+.expiringRow td {
+  background: rgba(212, 175, 55, 0.04);
+}
+
+.alertExpiring {
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: var(--color-gold);
+}
+
+.alertExpired {
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  color: #f87171;
+}
+
+@keyframes pulseRenew {
+  0%,
+  100% {
+    box-shadow: 0 0 12px rgba(248, 113, 113, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(248, 113, 113, 0.35);
+  }
+}
+
+@keyframes pulseRenewGold {
+  0%,
+  100% {
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(212, 175, 55, 0.4);
+  }
+}

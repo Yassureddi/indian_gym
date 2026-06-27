@@ -5,6 +5,11 @@ import { createUser, getUserByEmail, getUserByPhone, toSessionUser } from "./use
 import { saveMembership } from "./memberships";
 import { createPayment } from "./payments";
 import { logActivity } from "./activity";
+import {
+  notifyMemberJoined,
+  notifyMembershipRenewed,
+  notifyPaymentCompleted,
+} from "@/lib/notifications/events";
 import { createId } from "./store";
 import {
   calculateMembershipEndDate,
@@ -96,6 +101,7 @@ export async function completeMemberRegistration(
     planName: selection.fullName,
     membershipDuration: duration,
     date: joiningDate,
+    dueDate: joiningDate,
     reference,
   });
 
@@ -113,6 +119,16 @@ export async function completeMemberRegistration(
     "payment",
     `Payment of ₹${selection.price.toLocaleString("en-IN")} received via ${data.paymentMethod.toUpperCase()} from ${user.name}`,
     user.id
+  );
+
+  await notifyMemberJoined(user.id, user.name);
+  await notifyPaymentCompleted(
+    user.id,
+    user.name,
+    payment.id,
+    selection.price,
+    data.paymentMethod,
+    selection.billingName
   );
 
   return {

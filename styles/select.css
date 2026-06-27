@@ -97,7 +97,15 @@ select option[value=""][disabled] {
   --select-bg: rgba(0, 0, 0, 0.55);
 }
 
-/* Compact selects on smaller admin tables/forms */
+/* Compact table selects in admin supplement pages */
+.table select {
+  --select-bg: rgba(0, 0, 0, 0.55);
+  width: auto;
+  min-width: 130px;
+  font-size: 0.75rem;
+  padding: 0.5rem 2.25rem 0.5rem 0.625rem;
+}
+
 @media (max-width: 640px) {
   select {
     font-size: var(--text-body-sm);

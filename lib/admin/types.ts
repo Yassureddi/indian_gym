@@ -13,6 +13,8 @@ export interface Payment {
   planName: string;
   membershipDuration: string;
   date: string;
+  /** Scheduled installment due date this payment covers */
+  dueDate?: string;
   reference?: string;
 }
 

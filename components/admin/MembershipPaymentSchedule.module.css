@@ -1,0 +1,121 @@
+.section {
+  margin-top: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  margin: 0 0 1rem;
+  letter-spacing: 0.04em;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid rgba(212, 175, 55, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.8125rem;
+}
+
+.table th {
+  background: rgba(212, 175, 55, 0.06);
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.rowOverdue td {
+  background: rgba(248, 113, 113, 0.06);
+}
+
+.rowUpcoming td {
+  background: rgba(212, 175, 55, 0.03);
+}
+
+.statusPaid,
+.statusUpcoming,
+.statusOverdue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.statusPaid {
+  background: rgba(74, 222, 128, 0.12);
+  color: #4ade80;
+}
+
+.statusUpcoming {
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--color-gold);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.statusOverdue {
+  background: rgba(248, 113, 113, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+
+.payBtn {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  background: rgba(212, 175, 55, 0.1);
+  color: var(--color-gold);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.payBtn:hover {
+  background: rgba(212, 175, 55, 0.2);
+  transform: translateY(-1px);
+}
+
+.payBtnUrgent {
+  background: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.5);
+  color: #f87171;
+}
+
+.payBtnUrgent:hover {
+  background: rgba(248, 113, 113, 0.2);
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.empty {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: 2rem;
+}

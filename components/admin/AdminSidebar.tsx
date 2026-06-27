@@ -2,9 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import Logo from "@/components/brand/Logo";
 import AdminIcon from "./AdminIcon";
-import { ADMIN_NAV } from "@/lib/admin/nav";
+import {
+  ADMIN_NAV_CONTENT,
+  ADMIN_NAV_MAIN,
+  ADMIN_NAV_SUPPLEMENTS,
+  SUPPLEMENT_NAV_PATHS,
+} from "@/lib/admin/nav";
+import type { AdminIconName } from "@/lib/admin/nav";
 import type { SessionUser } from "@/lib/auth/types";
 import styles from "./AdminSidebar.module.css";
 
@@ -15,6 +22,35 @@ interface AdminSidebarProps {
   onClose: () => void;
 }
 
+function NavLink({
+  href,
+  label,
+  icon,
+  active,
+  onClose,
+  nested,
+}: {
+  href: string;
+  label: string;
+  icon: AdminIconName;
+  active: boolean;
+  onClose: () => void;
+  nested?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`${styles.link} ${nested ? styles.linkNested : ""} ${active ? styles.active : ""}`}
+      onClick={onClose}
+    >
+      <span className={styles.linkIcon}>
+        <AdminIcon name={icon} size={18} />
+      </span>
+      <span className={styles.linkText}>{label}</span>
+    </Link>
+  );
+}
+
 export default function AdminSidebar({
   user,
   onLogout,
@@ -22,11 +58,21 @@ export default function AdminSidebar({
   onClose,
 }: AdminSidebarProps) {
   const pathname = usePathname();
+  const supplementsOpenDefault = SUPPLEMENT_NAV_PATHS.some((p) => pathname.startsWith(p));
+  const [supplementsOpen, setSupplementsOpen] = useState(supplementsOpenDefault);
+
+  useEffect(() => {
+    if (SUPPLEMENT_NAV_PATHS.some((p) => pathname.startsWith(p))) {
+      setSupplementsOpen(true);
+    }
+  }, [pathname]);
 
   const isActive = (href: string) => {
     if (href === "/admin") return pathname === "/admin";
     return pathname.startsWith(href);
   };
+
+  const supplementsSectionActive = SUPPLEMENT_NAV_PATHS.some((p) => isActive(p));
 
   return (
     <>
@@ -51,18 +97,61 @@ export default function AdminSidebar({
 
         <nav className={styles.nav}>
           <p className={styles.navLabel}>Menu</p>
-          {ADMIN_NAV.map((item) => (
-            <Link
+          {ADMIN_NAV_MAIN.map((item) => (
+            <NavLink
               key={item.href}
               href={item.href}
-              className={`${styles.link} ${isActive(item.href) ? styles.active : ""}`}
-              onClick={onClose}
+              label={item.label}
+              icon={item.icon}
+              active={isActive(item.href)}
+              onClose={onClose}
+            />
+          ))}
+
+          <div className={styles.navGroup}>
+            <button
+              type="button"
+              className={`${styles.groupToggle} ${supplementsSectionActive ? styles.groupToggleActive : ""}`}
+              onClick={() => setSupplementsOpen((o) => !o)}
+              aria-expanded={supplementsOpen}
             >
-              <span className={styles.linkIcon}>
-                <AdminIcon name={item.icon} size={18} />
+              <span className={styles.groupLeft}>
+                <span className={styles.linkIcon}>
+                  <AdminIcon name="supplements" size={18} />
+                </span>
+                <span>Supplements Hub</span>
               </span>
-              <span className={styles.linkText}>{item.label}</span>
-            </Link>
+              <span className={`${styles.chevron} ${supplementsOpen ? styles.chevronOpen : ""}`} aria-hidden>
+                ▾
+              </span>
+            </button>
+            {supplementsOpen && (
+              <div className={styles.groupItems}>
+                {ADMIN_NAV_SUPPLEMENTS.map((item) => (
+                  <NavLink
+                    key={item.href}
+                    href={item.href}
+                    label={item.label}
+                    icon={item.icon}
+                    active={isActive(item.href)}
+                    onClose={onClose}
+                    nested
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          <p className={styles.navLabel}>Content</p>
+          {ADMIN_NAV_CONTENT.map((item) => (
+            <NavLink
+              key={item.href}
+              href={item.href}
+              label={item.label}
+              icon={item.icon}
+              active={isActive(item.href)}
+              onClose={onClose}
+            />
           ))}
         </nav>
 

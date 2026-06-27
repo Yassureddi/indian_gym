@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   BarChart,
   Bar,
@@ -32,6 +33,22 @@ interface OverviewData {
     monthlyRevenue: number;
     totalRevenue: number;
     pendingPayments: number;
+    todayStoreSales: number;
+    todayStoreRevenue: number;
+    monthlyStoreRevenue: number;
+  };
+  store: {
+    bestSelling: { id: string; name: string; qty: number; revenue: number }[];
+    lowStockProducts: { id: string; name: string; stock: number }[];
+    recentSales: {
+      id: string;
+      invoiceNumber: string;
+      customerName: string;
+      grandTotal: number;
+      paymentMethod: string;
+      createdAt: string;
+      soldByName: string;
+    }[];
   };
   charts: {
     revenue: { month: string; revenue: number }[];
@@ -47,6 +64,15 @@ const tooltipStyle = {
   fontSize: "12px",
 };
 
+function formatDateTime(date: string) {
+  return new Date(date).toLocaleString("en-IN", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 export default function AdminDashboardPage() {
   const [data, setData] = useState<OverviewData | null>(null);
 
@@ -60,7 +86,7 @@ export default function AdminDashboardPage() {
     return <p className={styles.loading}>Loading dashboard...</p>;
   }
 
-  const { stats, charts, recentActivity } = data;
+  const { stats, store, charts, recentActivity } = data;
 
   return (
     <div className={styles.page}>
@@ -85,7 +111,7 @@ export default function AdminDashboardPage() {
         <AdminStatCard
           label="Total Revenue"
           value={`₹${stats.totalRevenue.toLocaleString("en-IN")}`}
-          change="All time"
+          change="Membership payments"
           trend="up"
         />
         <AdminStatCard
@@ -94,6 +120,91 @@ export default function AdminDashboardPage() {
           change={`${stats.pendingPayments} pending`}
           trend={stats.pendingPayments > 0 ? "down" : "up"}
         />
+        <AdminStatCard
+          label="Today's Store Sales"
+          value={stats.todayStoreSales}
+          change={`₹${stats.todayStoreRevenue.toLocaleString("en-IN")} revenue`}
+          trend="up"
+        />
+        <AdminStatCard
+          label="Monthly Store Revenue"
+          value={`₹${stats.monthlyStoreRevenue.toLocaleString("en-IN")}`}
+          change="In-store POS"
+          trend="up"
+        />
+      </div>
+
+      <div className={styles.storeSection}>
+        <div className={styles.storeGrid}>
+          <div className={`${shared.panel} ${styles.storePanel}`}>
+            <div className={styles.panelHead}>
+              <h3>Best Selling Supplements</h3>
+              <Link href="/admin/store-sales">View all →</Link>
+            </div>
+            {store.bestSelling.length === 0 ? (
+              <p className={styles.panelEmpty}>No store sales yet.</p>
+            ) : (
+              <ul className={styles.rankList}>
+                {store.bestSelling.map((item, i) => (
+                  <li key={item.id}>
+                    <span className={styles.rank}>#{i + 1}</span>
+                    <div>
+                      <strong>{item.name}</strong>
+                      <span>{item.qty} sold · ₹{item.revenue.toLocaleString("en-IN")}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className={`${shared.panel} ${styles.storePanel}`}>
+            <div className={styles.panelHead}>
+              <h3>Low Stock Products</h3>
+              <Link href="/admin/supplements">Manage →</Link>
+            </div>
+            {store.lowStockProducts.length === 0 ? (
+              <p className={styles.panelEmpty}>All products well stocked.</p>
+            ) : (
+              <ul className={styles.rankList}>
+                {store.lowStockProducts.map((item) => (
+                  <li key={item.id}>
+                    <span className={`${styles.rank} ${styles.warn}`}>!</span>
+                    <div>
+                      <strong>{item.name}</strong>
+                      <span>{item.stock} left in stock</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className={`${shared.panel} ${styles.storePanel} ${styles.recentPanel}`}>
+            <div className={styles.panelHead}>
+              <h3>Recent Store Sales</h3>
+              <Link href="/admin/store">Open Store →</Link>
+            </div>
+            {store.recentSales.length === 0 ? (
+              <p className={styles.panelEmpty}>No recent sales.</p>
+            ) : (
+              <ul className={styles.salesList}>
+                {store.recentSales.slice(0, 5).map((sale) => (
+                  <li key={sale.id}>
+                    <div>
+                      <strong>{sale.invoiceNumber}</strong>
+                      <span>{sale.customerName}</span>
+                    </div>
+                    <div className={styles.saleMeta}>
+                      <strong>₹{sale.grandTotal.toLocaleString("en-IN")}</strong>
+                      <span>{formatDateTime(sale.createdAt)}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className={styles.charts}>

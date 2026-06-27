@@ -4,14 +4,15 @@ import { handleAuthError, jsonError } from "@/lib/auth/api";
 import { registerMember } from "@/lib/auth/auth-service";
 import { initializeDatabase } from "@/lib/db/init";
 import { getMembers } from "@/lib/db/users";
-import { mapUser } from "@/lib/api/mappers";
+import { buildAdminMemberRow } from "@/lib/admin/members";
 
 export async function GET() {
   try {
     await requireAdmin();
     await initializeDatabase();
     const members = await getMembers();
-    return NextResponse.json({ members: members.map(mapUser) });
+    const rows = await Promise.all(members.map(buildAdminMemberRow));
+    return NextResponse.json({ members: rows });
   } catch (error) {
     return handleAuthError(error);
   }

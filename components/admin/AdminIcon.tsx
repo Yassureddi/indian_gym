@@ -78,6 +78,41 @@ export default function AdminIcon({ name, size = 20 }: AdminIconProps) {
           <path d="M18 17V9M13 17V5M8 17v-3" />
         </svg>
       );
+    case "supplements":
+      return (
+        <svg {...props}>
+          <path d="M8 2h8l2 4v14a2 2 0 01-2 2H8a2 2 0 01-2-2V6l2-4z" />
+          <path d="M8 6h8M12 10v6" />
+        </svg>
+      );
+    case "orders":
+      return (
+        <svg {...props}>
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+          <path d="M3 6h18M16 10a4 4 0 01-8 0" />
+        </svg>
+      );
+    case "store":
+      return (
+        <svg {...props}>
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+          <path d="M9 22V12h6v10" />
+        </svg>
+      );
+    case "storeSales":
+      return (
+        <svg {...props}>
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+          <path d="M14 2v6h6M8 13h8M8 17h5" />
+        </svg>
+      );
+    case "notifications":
+      return (
+        <svg {...props}>
+          <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 01-3.46 0" />
+        </svg>
+      );
     default:
       return null;
   }
