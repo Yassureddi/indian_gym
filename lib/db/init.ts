@@ -1,4 +1,5 @@
 import { ensureDb } from "./mongo-helpers";
+import { isBuildPhase } from "./build-guard";
 import { ensureSeedUsers } from "./users";
 import { ensureSeedMemberships } from "./memberships";
 import { ensureSeedWorkoutPlans } from "./workout-plans";
@@ -16,7 +17,7 @@ import { ensureSeedNotifications } from "./notifications";
 let initialized = false;
 
 export async function initializeDatabase() {
-  if (initialized) return;
+  if (initialized || isBuildPhase()) return;
   await ensureDb();
   await ensureSeedUsers();
   await ensureSeedMemberships();

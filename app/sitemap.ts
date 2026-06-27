@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { fetchBlogs } from "@/lib/api/content";
 import { SITE_URL } from "@/lib/seo/config";
 
+export const dynamic = "force-dynamic";
+
 const PUBLIC_ROUTES: {
   path: string;
   priority: number;

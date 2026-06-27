@@ -9,6 +9,8 @@ import { createMetadata } from "@/lib/metadata";
 import { trainersListSchema, breadcrumbSchema } from "@/lib/seo/schema";
 import styles from "./page.module.css";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = createMetadata(
   "Trainers",
   "Meet certified fitness trainers at INDIAN GYM K N RAJU FITNESS, Visakhapatnam. Expert coaches for bodybuilding, weight loss, and personal training.",

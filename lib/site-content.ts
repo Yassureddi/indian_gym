@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import SiteContentModel from "@/models/SiteContent";
 import { ensureDb, toPlain } from "@/lib/db/mongo-helpers";
+import { withDbContent } from "@/lib/db/build-guard";
 import {
   DEFAULT_ABOUT_PREVIEW_IMAGE,
   type SiteContent,
@@ -11,12 +12,14 @@ const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads", "about");
 const SITE_CONTENT_KEY = "default";
 
 export async function getSiteContent(): Promise<SiteContent> {
-  await ensureDb();
-  const doc = await SiteContentModel.findOne({ key: SITE_CONTENT_KEY }).lean();
-  const content = toPlain<SiteContent & { key?: string }>(doc);
-  if (!content) return {};
-  const { key: _key, ...rest } = content;
-  return rest;
+  return withDbContent(async () => {
+    await ensureDb();
+    const doc = await SiteContentModel.findOne({ key: SITE_CONTENT_KEY }).lean();
+    const content = toPlain<SiteContent & { key?: string }>(doc);
+    if (!content) return {};
+    const { key: _key, ...rest } = content;
+    return rest;
+  }, {});
 }
 
 export async function getAboutPreviewImageUrl(): Promise<string> {

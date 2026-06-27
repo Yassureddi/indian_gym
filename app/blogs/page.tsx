@@ -9,6 +9,8 @@ import { formatDate } from "@/lib/utils";
 import { createMetadata } from "@/lib/metadata";
 import styles from "./page.module.css";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = createMetadata(
   "Blogs",
   "Fitness tips, nutrition advice, and wellness insights from KN Raju Fitness experts.",

@@ -11,6 +11,8 @@ import { createMetadata } from "@/lib/metadata";
 import { articleSchema, breadcrumbSchema } from "@/lib/seo/schema";
 import styles from "./page.module.css";
 
+export const dynamic = "force-dynamic";
+
 interface BlogPageProps {
   params: Promise<{ id: string }>;
 }
