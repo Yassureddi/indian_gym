@@ -1,8 +1,8 @@
-import { readJson, writeJson, createId } from "./store";
+import UserModel from "@/models/User";
+import { ensureDb, toPlain, toPlainList } from "./mongo-helpers";
+import { createId } from "./store";
 import { hashPassword } from "@/lib/auth/password";
 import type { User, SessionUser } from "@/lib/auth/types";
-
-const USERS_FILE = "users.json";
 
 export function toSessionUser(user: User): SessionUser {
   return {
@@ -20,35 +20,43 @@ export function toSessionUser(user: User): SessionUser {
 }
 
 export async function getMembers(): Promise<User[]> {
-  const users = await getUsers();
-  return users.filter((u) => u.role === "member");
+  await ensureDb();
+  const docs = await UserModel.find({ role: "member" }).lean();
+  return toPlainList<User>(docs);
 }
 
 export async function getUsers(): Promise<User[]> {
-  return readJson<User[]>(USERS_FILE, []);
+  await ensureDb();
+  const docs = await UserModel.find().lean();
+  return toPlainList<User>(docs);
 }
 
 export async function saveUsers(users: User[]) {
-  await writeJson(USERS_FILE, users);
+  await ensureDb();
+  await UserModel.deleteMany({});
+  if (users.length > 0) {
+    await UserModel.insertMany(users);
+  }
 }
 
 export async function getUserById(id: string): Promise<User | null> {
-  const users = await getUsers();
-  return users.find((u) => u.id === id) ?? null;
+  await ensureDb();
+  const doc = await UserModel.findOne({ id }).lean();
+  return toPlain<User>(doc);
 }
 
 export async function getUserByEmail(email: string): Promise<User | null> {
-  const users = await getUsers();
+  await ensureDb();
   const normalized = email.toLowerCase().trim();
-  return users.find((u) => u.email.toLowerCase() === normalized) ?? null;
+  const doc = await UserModel.findOne({ email: normalized }).lean();
+  return toPlain<User>(doc);
 }
 
 export async function getUserByPhone(phone: string): Promise<User | null> {
-  const users = await getUsers();
+  await ensureDb();
   const normalized = phone.replace(/\D/g, "");
-  return (
-    users.find((u) => u.phone.replace(/\D/g, "") === normalized) ?? null
-  );
+  const users = await getUsers();
+  return users.find((u) => u.phone.replace(/\D/g, "") === normalized) ?? null;
 }
 
 export async function findUserByLogin(login: string): Promise<User | null> {
@@ -65,17 +73,13 @@ export async function updateUser(
     Pick<User, "name" | "phone" | "email" | "goal" | "avatar" | "passwordHash" | "gender" | "age" | "joiningDate">
   >
 ): Promise<User | null> {
-  const users = await getUsers();
-  const index = users.findIndex((u) => u.id === id);
-  if (index === -1) return null;
-
-  users[index] = {
-    ...users[index],
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
-  await saveUsers(users);
-  return users[index];
+  await ensureDb();
+  const doc = await UserModel.findOneAndUpdate(
+    { id },
+    { ...updates, updatedAt: new Date().toISOString() },
+    { new: true }
+  ).lean();
+  return toPlain<User>(doc);
 }
 
 export async function createUser(data: {
@@ -89,7 +93,7 @@ export async function createUser(data: {
   age?: number;
   joiningDate?: string;
 }): Promise<User> {
-  const users = await getUsers();
+  await ensureDb();
   const now = new Date().toISOString();
   const user: User = {
     id: createId("user"),
@@ -105,8 +109,7 @@ export async function createUser(data: {
     createdAt: now,
     updatedAt: now,
   };
-  users.push(user);
-  await saveUsers(users);
+  await UserModel.create(user);
   return user;
 }
 
@@ -117,20 +120,18 @@ const DEMO_MEMBER_HASH =
   "$2b$12$sMh/osFM1GJRUjr4Vip5Te7g/8pJelHWHvffQWVFK.BtxImUPB/vu";
 
 export async function ensureSeedUsers() {
-  const users = await getUsers();
-  if (users.length > 0) return;
+  await ensureDb();
+  const demoAdmin = await UserModel.findOne({ id: "user_admin_demo" }).lean();
+  if (demoAdmin) return;
 
   const now = new Date().toISOString();
-  const adminHash = DEMO_ADMIN_HASH;
-  const memberHash = DEMO_MEMBER_HASH;
-
-  const seedUsers: User[] = [
+  await UserModel.insertMany([
     {
       id: "user_admin_demo",
       email: "admin@gym.com",
       phone: "9999999999",
       name: "Gym Admin",
-      passwordHash: adminHash,
+      passwordHash: DEMO_ADMIN_HASH,
       role: "admin",
       createdAt: now,
       updatedAt: now,
@@ -140,7 +141,7 @@ export async function ensureSeedUsers() {
       email: "member@gym.com",
       phone: "8142113631",
       name: "Demo Member",
-      passwordHash: memberHash,
+      passwordHash: DEMO_MEMBER_HASH,
       role: "member",
       goal: "Muscle Gain",
       gender: "Male",
@@ -149,7 +150,5 @@ export async function ensureSeedUsers() {
       createdAt: now,
       updatedAt: now,
     },
-  ];
-
-  await saveUsers(seedUsers);
+  ]);
 }

@@ -1,6 +1,8 @@
+import { ensureDb } from "./mongo-helpers";
 import { ensureSeedUsers } from "./users";
 import { ensureSeedMemberships } from "./memberships";
-import { ensureSeedWorkoutPlans } from "./workout-plans";import { ensureSeedDietPlans } from "./diet-plans";
+import { ensureSeedWorkoutPlans } from "./workout-plans";
+import { ensureSeedDietPlans } from "./diet-plans";
 import { ensureSeedPayments } from "./payments";
 import { ensureSeedActivity } from "./activity";
 import { ensureSeedGallery } from "./gallery";
@@ -15,6 +17,7 @@ let initialized = false;
 
 export async function initializeDatabase() {
   if (initialized) return;
+  await ensureDb();
   await ensureSeedUsers();
   await ensureSeedMemberships();
   await ensureSeedWorkoutPlans();

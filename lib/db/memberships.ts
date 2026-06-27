@@ -1,17 +1,20 @@
-import { readJson, writeJson, createId } from "./store";
+import MembershipModel from "@/models/Membership";
+import { ensureDb, toPlain, toPlainList } from "./mongo-helpers";
+import { createId } from "./store";
 import type { MemberMembership } from "@/lib/auth/types";
 
-const FILE = "memberships.json";
-
 export async function getMemberships(): Promise<MemberMembership[]> {
-  return readJson<MemberMembership[]>(FILE, []);
+  await ensureDb();
+  const docs = await MembershipModel.find().lean();
+  return toPlainList<MemberMembership>(docs);
 }
 
 export async function getMembershipById(
   id: string
 ): Promise<MemberMembership | null> {
-  const memberships = await getMemberships();
-  return memberships.find((m) => m.id === id) ?? null;
+  await ensureDb();
+  const doc = await MembershipModel.findOne({ id }).lean();
+  return toPlain<MemberMembership>(doc);
 }
 
 export async function getMembershipByUserId(
@@ -28,40 +31,34 @@ export async function getMembershipByUserId(
 export async function getMembershipsForUser(
   userId: string
 ): Promise<MemberMembership[]> {
-  const memberships = await getMemberships();
-  return memberships
-    .filter((m) => m.userId === userId)
-    .sort((a, b) => b.startDate.localeCompare(a.startDate));
+  await ensureDb();
+  const docs = await MembershipModel.find({ userId })
+    .sort({ startDate: -1 })
+    .lean();
+  return toPlainList<MemberMembership>(docs);
 }
 
 export async function expireActiveMembershipsForUser(userId: string) {
-  const memberships = await getMemberships();
-  let changed = false;
-  for (const membership of memberships) {
-    if (membership.userId === userId && membership.status === "active") {
-      membership.status = "expired";
-      changed = true;
-    }
-  }
-  if (changed) {
-    await writeJson(FILE, memberships);
-  }
+  await ensureDb();
+  await MembershipModel.updateMany(
+    { userId, status: "active" },
+    { $set: { status: "expired" } }
+  );
 }
 
 export async function saveMembership(membership: MemberMembership) {
-  const memberships = await getMemberships();
-  const index = memberships.findIndex((m) => m.id === membership.id);
-  if (index >= 0) {
-    memberships[index] = membership;
-  } else {
-    memberships.push(membership);
-  }
-  await writeJson(FILE, memberships);
+  await ensureDb();
+  await MembershipModel.findOneAndUpdate(
+    { id: membership.id },
+    membership,
+    { upsert: true, new: true }
+  );
 }
 
 export async function ensureSeedMemberships() {
-  const memberships = await getMemberships();
-  if (memberships.length > 0) return;
+  await ensureDb();
+  const count = await MembershipModel.countDocuments();
+  if (count > 0) return;
 
   const start = new Date();
   const end = new Date();

@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node --use-system-ca ./node_modules/next/dist/bin/next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "node --use-system-ca ./node_modules/next/dist/bin/next start",
+    "test:db": "node --use-system-ca ./node_modules/tsx/dist/cli.mjs scripts/test-db.ts",
     "seed": "npx tsx scripts/seed.ts",
     "lint": "next lint"
   },
@@ -14,6 +15,7 @@
     "framer-motion": "^11.18.2",
     "gsap": "^3.12.7",
     "jose": "^6.2.3",
+    "mongoose": "^9.7.3",
     "next": "^15.2.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

@@ -2,7 +2,7 @@ import { initializeDatabase } from "../lib/db/init";
 
 initializeDatabase()
   .then(() => {
-    console.log("Database seeded successfully (data/*.json)");
+    console.log("Database seeded successfully (MongoDB Atlas)");
   })
   .catch((err) => {
     console.error("Seed failed:", err);

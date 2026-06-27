@@ -1,35 +1,36 @@
-import { readJson, writeJson, createId } from "./store";
+import DietPlanModel from "@/models/DietPlan";
+import { ensureDb, toPlainList } from "./mongo-helpers";
+import { createId } from "./store";
 import type { DietPlan } from "@/lib/auth/types";
 
-const FILE = "diet-plans.json";
-
 export async function getDietPlans(): Promise<DietPlan[]> {
-  return readJson<DietPlan[]>(FILE, []);
+  await ensureDb();
+  const docs = await DietPlanModel.find().lean();
+  return toPlainList<DietPlan>(docs);
 }
 
 export async function getDietPlansByUserId(
   userId: string
 ): Promise<DietPlan[]> {
-  const plans = await getDietPlans();
-  return plans
-    .filter((p) => p.userId === userId)
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  await ensureDb();
+  const docs = await DietPlanModel.find({ userId })
+    .sort({ createdAt: -1 })
+    .lean();
+  return toPlainList<DietPlan>(docs);
 }
 
 export async function saveDietPlan(plan: DietPlan) {
-  const plans = await getDietPlans();
-  const index = plans.findIndex((p) => p.id === plan.id);
-  if (index >= 0) {
-    plans[index] = plan;
-  } else {
-    plans.push(plan);
-  }
-  await writeJson(FILE, plans);
+  await ensureDb();
+  await DietPlanModel.findOneAndUpdate({ id: plan.id }, plan, {
+    upsert: true,
+    new: true,
+  });
 }
 
 export async function ensureSeedDietPlans() {
-  const plans = await getDietPlans();
-  if (plans.length > 0) return;
+  await ensureDb();
+  const count = await DietPlanModel.countDocuments();
+  if (count > 0) return;
 
   const now = new Date().toISOString();
   await saveDietPlan({

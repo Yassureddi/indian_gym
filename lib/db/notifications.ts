@@ -1,4 +1,6 @@
-import { readJson, writeJson, createId } from "@/lib/db/store";
+import NotificationModel from "@/models/Notification";
+import { ensureDb, toPlain, toPlainList } from "./mongo-helpers";
+import { createId } from "./store";
 import type {
   Notification,
   NotificationCategory,
@@ -8,7 +10,6 @@ import { getMembers } from "./users";
 import { getMembershipByUserId } from "./memberships";
 import { getRemainingDays } from "@/lib/membership-utils";
 
-const FILE = "notifications.json";
 const MAX_NOTIFICATIONS = 500;
 
 function normalizeNotification(raw: Partial<Notification> & { id: string }): Notification {
@@ -28,19 +29,24 @@ function normalizeNotification(raw: Partial<Notification> & { id: string }): Not
 }
 
 export async function getNotifications(): Promise<Notification[]> {
-  const items = await readJson<Notification[]>(FILE, []);
-  return items
-    .map((n) => normalizeNotification(n))
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  await ensureDb();
+  const docs = await NotificationModel.find()
+    .sort({ createdAt: -1 })
+    .limit(MAX_NOTIFICATIONS)
+    .lean();
+  return toPlainList<Notification>(docs).map((n) => normalizeNotification(n));
 }
 
 export async function getUnreadNotificationCount(): Promise<number> {
-  const items = await getNotifications();
-  return items.filter((n) => !n.read).length;
+  await ensureDb();
+  return NotificationModel.countDocuments({ read: false });
 }
 
 export async function getNotificationById(id: string): Promise<Notification | null> {
-  return (await getNotifications()).find((n) => n.id === id) ?? null;
+  await ensureDb();
+  const doc = await NotificationModel.findOne({ id }).lean();
+  const n = toPlain<Notification>(doc);
+  return n ? normalizeNotification(n) : null;
 }
 
 export interface CreateNotificationInput {
@@ -57,10 +63,11 @@ export interface CreateNotificationInput {
 export async function createNotification(
   input: CreateNotificationInput
 ): Promise<Notification | null> {
-  const items = await getNotifications();
+  await ensureDb();
 
-  if (input.dedupeKey && items.some((n) => n.dedupeKey === input.dedupeKey)) {
-    return null;
+  if (input.dedupeKey) {
+    const existing = await NotificationModel.findOne({ dedupeKey: input.dedupeKey }).lean();
+    if (existing) return null;
   }
 
   const notification: Notification = {
@@ -77,53 +84,63 @@ export async function createNotification(
     dedupeKey: input.dedupeKey,
   };
 
-  items.unshift(notification);
-  await writeJson(FILE, items.slice(0, MAX_NOTIFICATIONS));
+  await NotificationModel.create(notification);
+
+  const count = await NotificationModel.countDocuments();
+  if (count > MAX_NOTIFICATIONS) {
+    const oldest = await NotificationModel.find()
+      .sort({ createdAt: 1 })
+      .limit(count - MAX_NOTIFICATIONS)
+      .select("id")
+      .lean();
+    const ids = oldest.map((d) => d.id);
+    await NotificationModel.deleteMany({ id: { $in: ids } });
+  }
+
   return notification;
 }
 
 export async function markNotificationRead(id: string): Promise<Notification | null> {
-  const items = await getNotifications();
-  const index = items.findIndex((n) => n.id === id);
-  if (index < 0) return null;
-  items[index] = { ...items[index], read: true };
-  await writeJson(FILE, items);
-  return items[index];
+  await ensureDb();
+  const doc = await NotificationModel.findOneAndUpdate(
+    { id },
+    { read: true },
+    { new: true }
+  ).lean();
+  const n = toPlain<Notification>(doc);
+  return n ? normalizeNotification(n) : null;
 }
 
 export async function markNotificationUnread(id: string): Promise<Notification | null> {
-  const items = await getNotifications();
-  const index = items.findIndex((n) => n.id === id);
-  if (index < 0) return null;
-  items[index] = { ...items[index], read: false };
-  await writeJson(FILE, items);
-  return items[index];
+  await ensureDb();
+  const doc = await NotificationModel.findOneAndUpdate(
+    { id },
+    { read: false },
+    { new: true }
+  ).lean();
+  const n = toPlain<Notification>(doc);
+  return n ? normalizeNotification(n) : null;
 }
 
 export async function deleteNotification(id: string): Promise<boolean> {
-  const items = await getNotifications();
-  const next = items.filter((n) => n.id !== id);
-  if (next.length === items.length) return false;
-  await writeJson(FILE, next);
-  return true;
+  await ensureDb();
+  const result = await NotificationModel.deleteOne({ id });
+  return result.deletedCount > 0;
 }
 
 export async function markAllNotificationsRead(): Promise<number> {
-  const items = await getNotifications();
-  let count = 0;
-  const updated = items.map((n) => {
-    if (n.read) return n;
-    count++;
-    return { ...n, read: true };
-  });
-  await writeJson(FILE, updated);
-  return count;
+  await ensureDb();
+  const result = await NotificationModel.updateMany(
+    { read: false },
+    { $set: { read: true } }
+  );
+  return result.modifiedCount;
 }
 
 export async function clearAllNotifications(): Promise<number> {
-  const items = await getNotifications();
-  const count = items.length;
-  await writeJson(FILE, []);
+  await ensureDb();
+  const count = await NotificationModel.countDocuments();
+  await NotificationModel.deleteMany({});
   return count;
 }
 
@@ -175,8 +192,9 @@ export async function syncMembershipExpiryNotifications(): Promise<void> {
 }
 
 export async function ensureSeedNotifications() {
-  const items = await getNotifications();
-  if (items.length > 0) return;
+  await ensureDb();
+  const count = await NotificationModel.countDocuments();
+  if (count > 0) return;
 
   const now = Date.now();
   const seed: Notification[] = [
@@ -211,5 +229,5 @@ export async function ensureSeedNotifications() {
     },
   ];
 
-  await writeJson(FILE, seed);
+  await NotificationModel.insertMany(seed);
 }

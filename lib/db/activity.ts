@@ -1,12 +1,17 @@
-import { readJson, writeJson, createId } from "@/lib/db/store";
+import ActivityModel from "@/models/Activity";
+import { ensureDb, toPlainList } from "./mongo-helpers";
+import { createId } from "./store";
 import type { ActivityItem, ActivityType } from "@/lib/admin/types";
 
-const FILE = "activity.json";
 const MAX_ITEMS = 50;
 
 export async function getActivity(): Promise<ActivityItem[]> {
-  const items = await readJson<ActivityItem[]>(FILE, []);
-  return items.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  await ensureDb();
+  const docs = await ActivityModel.find()
+    .sort({ createdAt: -1 })
+    .limit(MAX_ITEMS)
+    .lean();
+  return toPlainList<ActivityItem>(docs);
 }
 
 export async function logActivity(
@@ -14,20 +19,31 @@ export async function logActivity(
   message: string,
   userId?: string
 ) {
-  const items = await getActivity();
-  items.unshift({
+  await ensureDb();
+  await ActivityModel.create({
     id: createId("act"),
     type,
     message,
     userId,
     createdAt: new Date().toISOString(),
   });
-  await writeJson(FILE, items.slice(0, MAX_ITEMS));
+
+  const count = await ActivityModel.countDocuments();
+  if (count > MAX_ITEMS) {
+    const oldest = await ActivityModel.find()
+      .sort({ createdAt: 1 })
+      .limit(count - MAX_ITEMS)
+      .select("id")
+      .lean();
+    const ids = oldest.map((d) => d.id);
+    await ActivityModel.deleteMany({ id: { $in: ids } });
+  }
 }
 
 export async function ensureSeedActivity() {
-  const items = await getActivity();
-  if (items.length > 0) return;
+  await ensureDb();
+  const count = await ActivityModel.countDocuments();
+  if (count > 0) return;
 
   const now = Date.now();
   const seed: ActivityItem[] = [
@@ -68,5 +84,5 @@ export async function ensureSeedActivity() {
     },
   ];
 
-  await writeJson(FILE, seed);
+  await ActivityModel.insertMany(seed);
 }

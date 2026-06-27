@@ -1,22 +1,26 @@
-import { readJson, writeJson, createId } from "@/lib/db/store";
+import PaymentModel from "@/models/Payment";
+import { ensureDb, toPlain, toPlainList } from "./mongo-helpers";
+import { createId } from "./store";
 import type { Payment } from "@/lib/admin/types";
 
-const FILE = "payments.json";
-
 export async function getPayments(): Promise<Payment[]> {
-  return readJson<Payment[]>(FILE, []);
+  await ensureDb();
+  const docs = await PaymentModel.find().lean();
+  return toPlainList<Payment>(docs);
 }
 
 export async function getPaymentById(id: string): Promise<Payment | null> {
-  const payments = await getPayments();
-  return payments.find((p) => p.id === id) ?? null;
+  await ensureDb();
+  const doc = await PaymentModel.findOne({ id }).lean();
+  return toPlain<Payment>(doc);
 }
 
 export async function getPaymentsByUserId(userId: string): Promise<Payment[]> {
-  const payments = await getPayments();
-  return payments
-    .filter((p) => p.userId === userId)
-    .sort((a, b) => (b.dueDate ?? b.date).localeCompare(a.dueDate ?? a.date));
+  await ensureDb();
+  const docs = await PaymentModel.find({ userId }).lean();
+  return toPlainList<Payment>(docs).sort((a, b) =>
+    (b.dueDate ?? b.date).localeCompare(a.dueDate ?? a.date)
+  );
 }
 
 export async function createPayment(data: Omit<Payment, "id">): Promise<Payment> {
@@ -26,14 +30,17 @@ export async function createPayment(data: Omit<Payment, "id">): Promise<Payment>
 }
 
 export async function savePayment(payment: Payment) {
-  const payments = await getPayments();
-  payments.unshift(payment);
-  await writeJson(FILE, payments);
+  await ensureDb();
+  await PaymentModel.findOneAndUpdate({ id: payment.id }, payment, {
+    upsert: true,
+    new: true,
+  });
 }
 
 export async function ensureSeedPayments() {
-  const payments = await getPayments();
-  if (payments.length > 0) return;
+  await ensureDb();
+  const count = await PaymentModel.countDocuments();
+  if (count > 0) return;
 
   const now = new Date();
   const seed: Payment[] = [
@@ -80,7 +87,7 @@ export async function ensureSeedPayments() {
     },
   ];
 
-  await writeJson(FILE, seed);
+  await PaymentModel.insertMany(seed);
 }
 
 export function getMonthlyRevenue(payments: Payment[]) {

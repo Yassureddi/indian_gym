@@ -1,35 +1,36 @@
-import { readJson, writeJson, createId } from "./store";
+import WorkoutPlanModel from "@/models/WorkoutPlan";
+import { ensureDb, toPlainList } from "./mongo-helpers";
+import { createId } from "./store";
 import type { WorkoutPlan } from "@/lib/auth/types";
 
-const FILE = "workout-plans.json";
-
 export async function getWorkoutPlans(): Promise<WorkoutPlan[]> {
-  return readJson<WorkoutPlan[]>(FILE, []);
+  await ensureDb();
+  const docs = await WorkoutPlanModel.find().lean();
+  return toPlainList<WorkoutPlan>(docs);
 }
 
 export async function getWorkoutPlansByUserId(
   userId: string
 ): Promise<WorkoutPlan[]> {
-  const plans = await getWorkoutPlans();
-  return plans
-    .filter((p) => p.userId === userId)
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  await ensureDb();
+  const docs = await WorkoutPlanModel.find({ userId })
+    .sort({ createdAt: -1 })
+    .lean();
+  return toPlainList<WorkoutPlan>(docs);
 }
 
 export async function saveWorkoutPlan(plan: WorkoutPlan) {
-  const plans = await getWorkoutPlans();
-  const index = plans.findIndex((p) => p.id === plan.id);
-  if (index >= 0) {
-    plans[index] = plan;
-  } else {
-    plans.push(plan);
-  }
-  await writeJson(FILE, plans);
+  await ensureDb();
+  await WorkoutPlanModel.findOneAndUpdate({ id: plan.id }, plan, {
+    upsert: true,
+    new: true,
+  });
 }
 
 export async function ensureSeedWorkoutPlans() {
-  const plans = await getWorkoutPlans();
-  if (plans.length > 0) return;
+  await ensureDb();
+  const count = await WorkoutPlanModel.countDocuments();
+  if (count > 0) return;
 
   const now = new Date().toISOString();
   await saveWorkoutPlan({

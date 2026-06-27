@@ -1,4 +1,7 @@
-import { readJson, writeJson, createId } from "./store";
+import StoreSaleModel from "@/models/StoreSale";
+import SupplementModel from "@/models/Supplement";
+import { ensureDb, toPlain, toPlainList } from "./mongo-helpers";
+import { createId } from "./store";
 import type { StoreSale, StoreSaleItem } from "@/lib/store-pos";
 import { getEffectivePrice } from "@/lib/supplements";
 import { getSupplementById, getSupplements } from "./supplements";
@@ -7,17 +10,10 @@ import {
   notifyStockLevelChange,
 } from "@/lib/notifications/events";
 
-const FILE = "store-sales.json";
-
 export async function getStoreSales(): Promise<StoreSale[]> {
-  const items = await readJson<StoreSale[]>(FILE, []);
-  return items.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
-}
-
-async function saveStoreSales(items: StoreSale[]) {
-  await writeJson(FILE, items);
+  await ensureDb();
+  const docs = await StoreSaleModel.find().sort({ createdAt: -1 }).lean();
+  return toPlainList<StoreSale>(docs);
 }
 
 function generateInvoiceNumber(existing: StoreSale[]): string {
@@ -33,6 +29,7 @@ async function reduceStockBatch(
   | { ok: true; previousQuantities: Record<string, number> }
   | { ok: false; error: string }
 > {
+  await ensureDb();
   const supplements = await getSupplements();
   const previousQuantities: Record<string, number> = {};
 
@@ -48,15 +45,24 @@ async function reduceStockBatch(
   }
 
   for (const line of lines) {
-    const index = supplements.findIndex((s) => s.id === line.supplementId);
-    supplements[index] = {
-      ...supplements[index],
-      stockQuantity: supplements[index].stockQuantity - line.quantity,
-      updatedAt: new Date().toISOString(),
-    };
+    const result = await SupplementModel.findOneAndUpdate(
+      {
+        id: line.supplementId,
+        stockQuantity: { $gte: line.quantity },
+        isActive: true,
+      },
+      {
+        $inc: { stockQuantity: -line.quantity },
+        $set: { updatedAt: new Date().toISOString() },
+      },
+      { new: true }
+    ).lean();
+
+    if (!result) {
+      return { ok: false, error: "Could not update stock. Please try again." };
+    }
   }
 
-  await writeJson("supplements.json", supplements);
   return { ok: true, previousQuantities };
 }
 
@@ -153,8 +159,8 @@ export async function createStoreSale(data: {
     createdAt: now,
   };
 
-  existing.unshift(sale);
-  await saveStoreSales(existing);
+  await ensureDb();
+  await StoreSaleModel.create(sale);
 
   await notifyStoreSaleCompleted(sale.id, sale.customerName, sale.grandTotal);
 
@@ -162,11 +168,14 @@ export async function createStoreSale(data: {
 }
 
 export async function getStoreSaleById(id: string): Promise<StoreSale | null> {
-  return (await getStoreSales()).find((s) => s.id === id) ?? null;
+  await ensureDb();
+  const doc = await StoreSaleModel.findOne({ id }).lean();
+  return toPlain<StoreSale>(doc);
 }
 
 export async function ensureSeedStoreSales() {
-  await getStoreSales();
+  await ensureDb();
+  await StoreSaleModel.countDocuments();
 }
 
 export function getStoreSalesStats(sales: StoreSale[]) {

@@ -1,11 +1,12 @@
-import { readJson, writeJson, createId } from "./store";
+import TrainerModel from "@/models/Trainer";
+import { ensureDb, toPlain, toPlainList } from "./mongo-helpers";
+import { createId } from "./store";
 import type { Trainer } from "@/lib/trainers";
 
-const FILE = "trainers.json";
-
 export async function getTrainers(): Promise<Trainer[]> {
-  const items = await readJson<Trainer[]>(FILE, []);
-  return items.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+  await ensureDb();
+  const docs = await TrainerModel.find().sort({ sortOrder: 1 }).lean();
+  return toPlainList<Trainer>(docs);
 }
 
 export async function getActiveTrainers(): Promise<Trainer[]> {
@@ -13,15 +14,17 @@ export async function getActiveTrainers(): Promise<Trainer[]> {
 }
 
 export async function getTrainerById(id: string): Promise<Trainer | null> {
-  return (await getTrainers()).find((t) => t.id === id) ?? null;
+  await ensureDb();
+  const doc = await TrainerModel.findOne({ id }).lean();
+  return toPlain<Trainer>(doc);
 }
 
 export async function saveTrainer(trainer: Trainer) {
-  const items = await getTrainers();
-  const index = items.findIndex((t) => t.id === trainer.id);
-  if (index >= 0) items[index] = trainer;
-  else items.push(trainer);
-  await writeJson(FILE, items);
+  await ensureDb();
+  await TrainerModel.findOneAndUpdate({ id: trainer.id }, trainer, {
+    upsert: true,
+    new: true,
+  });
 }
 
 export async function createTrainer(data: {
@@ -110,8 +113,9 @@ const TRAINER_SEED: Omit<Trainer, "id">[] = [
 ];
 
 export async function ensureSeedTrainers() {
-  const items = await getTrainers();
-  if (items.length > 0) return;
+  await ensureDb();
+  const count = await TrainerModel.countDocuments();
+  if (count > 0) return;
   for (const seed of TRAINER_SEED) {
     await saveTrainer({ ...seed, id: createId("trainer") });
   }

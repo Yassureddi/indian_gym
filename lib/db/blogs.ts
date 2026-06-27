@@ -1,12 +1,13 @@
-import { readJson, writeJson, createId } from "./store";
+import BlogModel from "@/models/Blog";
+import { ensureDb, toPlain, toPlainList } from "./mongo-helpers";
+import { createId } from "./store";
 import { slugify } from "@/lib/utils/slug";
 import type { BlogItem } from "@/lib/blog";
 
-const FILE = "blogs.json";
-
 export async function getBlogs(): Promise<BlogItem[]> {
-  const items = await readJson<BlogItem[]>(FILE, []);
-  return items.sort((a, b) => b.date.localeCompare(a.date));
+  await ensureDb();
+  const docs = await BlogModel.find().sort({ date: -1 }).lean();
+  return toPlainList<BlogItem>(docs);
 }
 
 export async function getPublishedBlogs(): Promise<BlogItem[]> {
@@ -14,15 +15,17 @@ export async function getPublishedBlogs(): Promise<BlogItem[]> {
 }
 
 export async function getBlogById(id: string): Promise<BlogItem | null> {
-  return (await getBlogs()).find((b) => b.id === id) ?? null;
+  await ensureDb();
+  const doc = await BlogModel.findOne({ id }).lean();
+  return toPlain<BlogItem>(doc);
 }
 
 export async function saveBlog(blog: BlogItem) {
-  const items = await getBlogs();
-  const index = items.findIndex((b) => b.id === blog.id);
-  if (index >= 0) items[index] = blog;
-  else items.push(blog);
-  await writeJson(FILE, items);
+  await ensureDb();
+  await BlogModel.findOneAndUpdate({ id: blog.id }, blog, {
+    upsert: true,
+    new: true,
+  });
 }
 
 const BLOG_SEED = [
@@ -56,8 +59,9 @@ const BLOG_SEED = [
 ];
 
 export async function ensureSeedBlogs() {
-  const items = await getBlogs();
-  if (items.length > 0) return;
+  await ensureDb();
+  const count = await BlogModel.countDocuments();
+  if (count > 0) return;
   for (const seed of BLOG_SEED) {
     const blog: BlogItem = {
       id: createId("blog"),

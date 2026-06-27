@@ -1,13 +1,12 @@
-import { readJson, writeJson, createId } from "./store";
-import type { Supplement, SupplementCategory } from "@/lib/supplements";
-
-const FILE = "supplements.json";
+import SupplementModel from "@/models/Supplement";
+import { ensureDb, toPlain, toPlainList } from "./mongo-helpers";
+import { createId } from "./store";
+import type { Supplement } from "@/lib/supplements";
 
 export async function getSupplements(): Promise<Supplement[]> {
-  const items = await readJson<Supplement[]>(FILE, []);
-  return items.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
+  await ensureDb();
+  const docs = await SupplementModel.find().sort({ createdAt: -1 }).lean();
+  return toPlainList<Supplement>(docs);
 }
 
 export async function getActiveSupplements(): Promise<Supplement[]> {
@@ -19,16 +18,15 @@ export async function getPublishedSupplements(): Promise<Supplement[]> {
 }
 
 export async function getSupplementById(id: string): Promise<Supplement | null> {
-  return (await getSupplements()).find((s) => s.id === id) ?? null;
-}
-
-async function saveSupplements(items: Supplement[]) {
-  await writeJson(FILE, items);
+  await ensureDb();
+  const doc = await SupplementModel.findOne({ id }).lean();
+  return toPlain<Supplement>(doc);
 }
 
 export async function createSupplement(
   data: Omit<Supplement, "id" | "createdAt" | "updatedAt">
 ): Promise<Supplement> {
+  await ensureDb();
   const now = new Date().toISOString();
   const supplement: Supplement = {
     ...data,
@@ -36,57 +34,43 @@ export async function createSupplement(
     createdAt: now,
     updatedAt: now,
   };
-  const items = await getSupplements();
-  items.push(supplement);
-  await saveSupplements(items);
+  await SupplementModel.create(supplement);
   return supplement;
 }
 
 export async function updateSupplement(
   id: string,
-  updates: Partial<
-    Omit<Supplement, "id" | "createdAt" | "updatedAt">
-  >
+  updates: Partial<Omit<Supplement, "id" | "createdAt" | "updatedAt">>
 ): Promise<Supplement | null> {
-  const items = await getSupplements();
-  const index = items.findIndex((s) => s.id === id);
-  if (index === -1) return null;
-
-  items[index] = {
-    ...items[index],
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
-  await saveSupplements(items);
-  return items[index];
+  await ensureDb();
+  const doc = await SupplementModel.findOneAndUpdate(
+    { id },
+    { ...updates, updatedAt: new Date().toISOString() },
+    { new: true }
+  ).lean();
+  return toPlain<Supplement>(doc);
 }
 
 export async function deleteSupplement(id: string): Promise<boolean> {
-  const items = await getSupplements();
-  const next = items.filter((s) => s.id !== id);
-  if (next.length === items.length) return false;
-  await saveSupplements(next);
-  return true;
+  await ensureDb();
+  const result = await SupplementModel.deleteOne({ id });
+  return result.deletedCount > 0;
 }
 
 export async function reduceSupplementStock(
   id: string,
   quantity: number
 ): Promise<Supplement | null> {
-  const items = await getSupplements();
-  const index = items.findIndex((s) => s.id === id);
-  if (index === -1) return null;
-
-  const supplement = items[index];
-  if (supplement.stockQuantity < quantity) return null;
-
-  items[index] = {
-    ...supplement,
-    stockQuantity: supplement.stockQuantity - quantity,
-    updatedAt: new Date().toISOString(),
-  };
-  await saveSupplements(items);
-  return items[index];
+  await ensureDb();
+  const doc = await SupplementModel.findOneAndUpdate(
+    { id, stockQuantity: { $gte: quantity }, isActive: true },
+    {
+      $inc: { stockQuantity: -quantity },
+      $set: { updatedAt: new Date().toISOString() },
+    },
+    { new: true }
+  ).lean();
+  return toPlain<Supplement>(doc);
 }
 
 const SEED: Omit<Supplement, "id" | "createdAt" | "updatedAt">[] = [
@@ -168,8 +152,9 @@ const SEED: Omit<Supplement, "id" | "createdAt" | "updatedAt">[] = [
 ];
 
 export async function ensureSeedSupplements() {
-  const items = await getSupplements();
-  if (items.length > 0) return;
+  await ensureDb();
+  const count = await SupplementModel.countDocuments();
+  if (count > 0) return;
 
   for (const seed of SEED) {
     await createSupplement(seed);

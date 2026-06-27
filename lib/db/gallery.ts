@@ -1,11 +1,12 @@
-import { readJson, writeJson, createId } from "./store";
+import GalleryModel from "@/models/Gallery";
+import { ensureDb, toPlain, toPlainList } from "./mongo-helpers";
+import { createId } from "./store";
 import type { GalleryCategory, GalleryItem } from "@/lib/gallery";
 
-const FILE = "gallery.json";
-
 export async function getGalleryItems(): Promise<GalleryItem[]> {
-  const items = await readJson<GalleryItem[]>(FILE, []);
-  return items.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+  await ensureDb();
+  const docs = await GalleryModel.find().sort({ sortOrder: 1 }).lean();
+  return toPlainList<GalleryItem>(docs);
 }
 
 export async function getPublishedGalleryItems(category?: string): Promise<GalleryItem[]> {
@@ -17,24 +18,23 @@ export async function getPublishedGalleryItems(category?: string): Promise<Galle
 }
 
 export async function getGalleryItemById(id: string): Promise<GalleryItem | null> {
-  const items = await getGalleryItems();
-  return items.find((i) => i.id === id) ?? null;
+  await ensureDb();
+  const doc = await GalleryModel.findOne({ id }).lean();
+  return toPlain<GalleryItem>(doc);
 }
 
 export async function saveGalleryItem(item: GalleryItem) {
-  const items = await getGalleryItems();
-  const index = items.findIndex((i) => i.id === item.id);
-  if (index >= 0) items[index] = item;
-  else items.push(item);
-  await writeJson(FILE, items);
+  await ensureDb();
+  await GalleryModel.findOneAndUpdate({ id: item.id }, item, {
+    upsert: true,
+    new: true,
+  });
 }
 
 export async function deleteGalleryItem(id: string): Promise<boolean> {
-  const items = await getGalleryItems();
-  const next = items.filter((i) => i.id !== id);
-  if (next.length === items.length) return false;
-  await writeJson(FILE, next);
-  return true;
+  await ensureDb();
+  const result = await GalleryModel.deleteOne({ id });
+  return result.deletedCount > 0;
 }
 
 export async function createGalleryItem(data: {
@@ -79,8 +79,9 @@ const GALLERY_SEED: Omit<GalleryItem, "id">[] = [
 ];
 
 export async function ensureSeedGallery() {
-  const items = await getGalleryItems();
-  if (items.length > 0) return;
+  await ensureDb();
+  const count = await GalleryModel.countDocuments();
+  if (count > 0) return;
   for (const seed of GALLERY_SEED) {
     await saveGalleryItem({ ...seed, id: createId("gal") });
   }
